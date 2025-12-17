@@ -1,0 +1,16 @@
+{
+  "name": "bootstrap-by-need",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "live-server ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.22.0",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
