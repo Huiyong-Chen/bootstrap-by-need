@@ -4,13 +4,15 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "start": "live-server ."
+    "build": "tsc -w",
+    "serve": "pnpm build & live-server ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.22.0",
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "five-server": "^0.4.5",
+    "typescript": "^5.9.3"
   }
 }

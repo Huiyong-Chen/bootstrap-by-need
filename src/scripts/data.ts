@@ -1,5 +1,7 @@
+import { QuestionInfo } from "../types/index.types.js";
+
 // 题库：20道题目
-export const questionBank = [
+export const questionBank: QuestionInfo[] = [
   {
     question: "1 + 1 = ?",
     answer: "2",

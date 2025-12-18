@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // 保持现代语法，不转译成 ES5
+    "module": "nodenext", // 保持 import/export
+    "moduleResolution": "nodenext", //支持原生 ESM 的解析逻辑
+    "outDir": "./dist", // 产物输出到 dist
+    "rootDir": "./src", // 源码在 srcØ
+    "strict": true, //开启严格模式
+    "skipLibCheck": true, // 跳过库文件检查，加速
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"]
+}
