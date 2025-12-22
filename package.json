@@ -4,8 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "dev": "pnpm build & live-server .",
     "build": "tsc -w",
-    "serve": "pnpm build & live-server ."
+    "serve": "live-server ."
   },
   "keywords": [],
   "author": "",

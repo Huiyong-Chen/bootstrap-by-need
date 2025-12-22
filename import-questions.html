@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>导入题库</title>
+
+    <link rel="stylesheet" href="./src/styles/index.css" />
+    <link rel="stylesheet" href="./src/styles/app.css" />
+  </head>
+  <body>
+    <div id="root">
+      <div class="app-container">
+        <div class="import-page">
+          <header class="import-page-header">
+            <a id="backBtn" href="/" class="back-button">← 返回首页</a>
+            <h1>导入题库</h1>
+          </header>
+          <main class="import-page-content">
+            <div class="role-selection-section">
+              <h2>选择或创建岗位</h2>
+              <div class="role-selection">
+                <div id="existingRolesCtn" class="existing-roles hidden">
+                  <label for="roleSelect">选择已有岗位：</label>
+                  <select id="roleSelect" class="select-input">
+                    <option value="">请选择岗位</option>
+                  </select>
+                </div>
+                <div class="create-role">
+                  <h3 id="createNewRoleLabel">创建新岗位：</h3>
+                  <form id="createRoleForm" class="create-role-inputs">
+                    <div class="create-role-input">
+                      <input
+                        name="id"
+                        required
+                        placeholder="岗位 ID（唯一标识）"
+                        class="text-input"
+                        type="text"
+                      />
+                    </div>
+                    <div class="create-role-input">
+                      <input
+                        name="name"
+                        required
+                        placeholder="显示名称（可选，默认使用 ID）"
+                        class="text-input"
+                        type="text"
+                      />
+                    </div>
+                    <button
+                      id="createRoleFormSubmitBtn"
+                      class="create-button"
+                      type="submit"
+                      disabled
+                    >
+                      创建
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div id="importPlaceholder" class="import-placeholder">
+              <p>请先选择或创建一个岗位，然后导入题库数据</p>
+            </div>
+            <div id="importerSection" class="importer-section hidden">
+              <div class="question-bank-importer">
+                <div class="importer-header">
+                  <h3>导入题库</h3>
+                  <div class="mode-selector">
+                    <button id="manualBtn" class="mode-button active">
+                      手动输入
+                    </button>
+                    <button id="importBtn" class="mode-button">文件导入</button>
+                  </div>
+                </div>
+                <div class="importer-content">
+                  <form id="manualForm" class="manual-input-section">
+                    <label for="manual-input">
+                      请输入 JSON 格式的题目数据（数组格式）
+                    </label>
+                    <textarea
+                      id="manual-input"
+                      name="questions"
+                      required
+                      class="manual-textarea"
+                      placeholder='示例（id 字段不需要提供，系统会自动生成）：
+[
+  {
+    "type": "单选题",
+    "title": "题目内容",
+    "options": ["选项A", "选项B", "选项C", "选项D"],
+    "answer": "选项A",
+    "score": 5,
+    "difficulty": 1
+  },
+  {
+    "type": "判断题",
+    "title": "这是判断题",
+    "answer": "正确",
+    "score": 2
+  }
+]'
+                      rows="12"
+                    ></textarea>
+                    <button id="manualSubmitBtn" class="import-button" disabled>
+                      导入题目
+                    </button>
+                  </form>
+                  <form id="importForm" class="file-input-section hidden">
+                    <label for="importFileInput" class="file-input-label">
+                      <span class="file-input-text">选择 JSON 文件</span>
+                      <input
+                        id="importFileInput"
+                        accept=".json,application/json"
+                        class="file-input"
+                        type="file"
+                      />
+                    </label>
+                    <p class="file-hint">
+                      请选择包含题目数组的 JSON 文件，格式与手动输入相同（id
+                      字段不需要提供，系统会自动生成）
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./dist/import-questions/index.js"></script>
+  </body>
+</html>
