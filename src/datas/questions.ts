@@ -172,7 +172,7 @@ export function generatePaper(
 
   const picker = buildWeightedPicker(ratios)
   const available = Object.fromEntries(
-    (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(([type, list]) => [type, [...list]]),
+    Object.entries(bank).map(([type, list]) => [type, [...list]]),
   ) as Record<QuestionType, QuestionInfo[]>
 
   const result: QuestionInfo[] = []
@@ -208,7 +208,7 @@ export function generatePaper(
 }
 
 function buildWeightedPicker(ratios: RatioMap) {
-  const entries = (Object.entries(ratios) as unknown as [QuestionType, number][])
+  const entries: [QuestionType, number][] = Object.entries(ratios).map(([key, value]) => [+key as QuestionType, value])
   const totalWeight = entries.reduce((acc, [, weight]) => acc + weight, 0)
 
   return (): QuestionType | null => {

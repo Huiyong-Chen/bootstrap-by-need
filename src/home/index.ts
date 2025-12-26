@@ -4,33 +4,49 @@ import { getAllRoles } from "../datas/roles.js";
 import { DOMS, emptyRoleDisplay, generatePagerDisplay, randomResultMessageDisplay, remainingScoreCtnDisplay, roleSelectorDisplay, weightConfigDisplay } from "../doms/home.js";
 import { QuestionByType, QuestionInfo, QuestionType, QuestionTypeChineseName, QuestionTypeOrder, RoleInfoRecord } from "../types/index.types.js";
 import { buildDoc, downloadDoc } from "../utils/docExporter.js";
+import { showError, showSuccess } from "../utils/notification.js";
+import { HomeAppState } from "../states/homeState.js";
 
+// UI 更新工具函数
+class HomeUIUpdater {
+  static updateTotalRatioDisplay(totalRatio: number) {
+    DOMS.totalRatio.innerText = `总权重：${totalRatio}`
+  }
+
+  static updateQuestionRatio(state: HomeAppState, type: QuestionType, ratio: number) {
+    state.updateQuestionRatio(type, ratio)
+    const totalRatio = state.calculateTotalRatio()
+    this.updateTotalRatioDisplay(totalRatio)
+  }
+}
 
 window.addEventListener("DOMContentLoaded", () => {
+  const appState = new HomeAppState()
 
-  DOMS.roleSelect.onchange = roleSelectChange;
+  DOMS.roleSelect.onchange = () => handleRoleSelectChange(appState);
   DOMS.ratioList.onchange = () => {
     DOMS.randomBtn.disabled =
-      !DOMS.ratioList.checkValidity() || !Object.values(questionRatioList).some(i => i > 0);
+      !DOMS.ratioList.checkValidity() || !appState.hasValidRatios();
   };
-  DOMS.randomBtn.onclick = generateQuestions
-  DOMS.exportQuestionsPager.onclick = handleExport
+  DOMS.randomBtn.onclick = () => generateQuestions(appState)
+  DOMS.exportQuestionsPager.onclick = () => handleExport(appState)
 
-  async function roleSelectChange() {
+  async function handleRoleSelectChange(state: HomeAppState) {
     const selectedRoleId = DOMS.roleSelect.value
     if (selectedRoleId) {
-      const selectedRole = (await getAllRoles()).find(i => i.id === selectedRoleId)!
+      const roles = await state.getRoles()
+      const selectedRole = roles.find(i => i.id === selectedRoleId)!
       setRoleBadgeText(selectedRole.name)
       weightConfigDisplay(false)
       // 根据所选岗位，匹配题目
-      renderQuestionsRatioAndPreviewExport(selectedRoleId)
+      renderQuestionsRatioAndPreviewExport(selectedRoleId, state)
     } else {
       setRoleBadgeText("")
       weightConfigDisplay(true)
     }
   }
   // 人员选择器渲染
-  function rolesSelectorRedner(roles: RoleInfoRecord[]) {
+  function rolesSelectorRender(roles: RoleInfoRecord[], state: HomeAppState) {
     if (roles.length) {
       const fragment = document.createDocumentFragment();
       for (const role of roles) {
@@ -43,7 +59,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // 表单添加后，默认选中第一项
       DOMS.roleSelect.value = roles[0].id;
-      roleSelectChange()
+      handleRoleSelectChange(state)
 
       roleSelectorDisplay(false);
       emptyRoleDisplay(true);
@@ -57,24 +73,26 @@ window.addEventListener("DOMContentLoaded", () => {
     DOMS.roleBadge.innerText = `当前岗位：${roleName}`;
   }
 
-  // 当前角色题库
-  let questionBanks: QuestionByType | null = null
-  let questionRatioList: Partial<Record<QuestionType, number>> = {}
   // 根据所选角色，渲染题库权重
-  async function renderQuestionsRatioAndPreviewExport(roleId: string) {
-    questionBanks = await loadQuestionBanks(roleId)
-
-
-    renderQuestionRatio()
+  async function renderQuestionsRatioAndPreviewExport(roleId: string, state: HomeAppState) {
+    state.questionBanks = await loadQuestionBanks(roleId)
+    renderQuestionRatio(state)
   }
 
-  function renderQuestionRatio() {
-    if (!questionBanks) {
+  function renderQuestionRatio(state: HomeAppState) {
+    if (!state.questionBanks) {
       return
     }
 
-    const questionTypes = Object.keys(questionBanks)
-    questionRatioList = {}
+    const questionTypes = Object.keys(state.questionBanks)
+    // 只保留现有题型的权重，移除不存在的题型权重
+    const existingTypes = questionTypes.map(type => +type as QuestionType)
+    Object.keys(state.questionRatioList).forEach(key => {
+      const type = +key as QuestionType
+      if (!existingTypes.includes(type)) {
+        delete state.questionRatioList[type]
+      }
+    })
 
     const fragment = document.createDocumentFragment()
 
@@ -87,11 +105,11 @@ window.addEventListener("DOMContentLoaded", () => {
       const typeItemInfoEle = document.createElement("div")
       typeItemInfoEle.classList.add("ratio-item-info")
 
-      const typeLableEle = document.createElement("strong")
-      typeLableEle.innerText = QuestionTypeChineseName[questionType]
+      const typeLabelEle = document.createElement("strong")
+      typeLabelEle.innerText = QuestionTypeChineseName[questionType]
 
-      const totalQuestionLabel = document.createElement("span")
-      totalQuestionLabel.innerText = `共 ${questionBanks![questionType].length} 题`
+      const totalQuestionsLabel = document.createElement("span")
+      totalQuestionsLabel.innerText = `共 ${state.questionBanks![questionType].length} 题`
 
       const typeRatioEle = document.createElement("input") as HTMLInputElement
 
@@ -101,13 +119,13 @@ window.addEventListener("DOMContentLoaded", () => {
       typeRatioEle.placeholder = '输入权重'
       typeRatioEle.min = '0';
       typeRatioEle.step = '1'
-      typeRatioEle.value = '0'
+      typeRatioEle.value = (state.questionRatioList[questionType] || 0).toString()
       typeRatioEle.onchange = e => {
-        questionRatioChange((e.target as HTMLInputElement).value, questionType)
+        HomeUIUpdater.updateQuestionRatio(state, questionType, +(e.target as HTMLInputElement).value)
       }
 
-      typeItemInfoEle.appendChild(typeLableEle)
-      typeItemInfoEle.appendChild(totalQuestionLabel)
+      typeItemInfoEle.appendChild(typeLabelEle)
+      typeItemInfoEle.appendChild(totalQuestionsLabel)
 
       typeItemEle.appendChild(typeItemInfoEle)
       typeItemEle.appendChild(typeRatioEle)
@@ -118,44 +136,37 @@ window.addEventListener("DOMContentLoaded", () => {
     DOMS.ratioList.appendChild(fragment)
   }
 
-  function questionRatioChange(value: string | number, type: QuestionType) {
-    questionRatioList[type] = +value
 
-    DOMS.totalRatio.innerText = `总权重：${Object.values(questionRatioList).reduce((t, c) => t + c, 0)}`
-  }
-
-  let generatedPaper: GeneratedPaper | null = null
-
-  function generateQuestions() {
+  function generateQuestions(state: HomeAppState) {
     if (+DOMS.targetScore.value <= 0) {
-      alert('请输入需要生成的总分数')
+      showError('请输入需要生成的总分数')
       return
     }
 
-    generatedPaper = generatePaper(questionBanks!, questionRatioList, +DOMS.targetScore.value)
+    state.generatedPaper = generatePaper(state.questionBanks!, state.questionRatioList, +DOMS.targetScore.value)
 
     const typePriority = (type: QuestionType) => {
       const idx = QuestionTypeOrder.indexOf(type)
       return idx === -1 ? Number.MAX_SAFE_INTEGER : idx
     }
 
-    const sortedList = [...generatedPaper.list].sort((a, b) => {
+    const sortedList = [...state.generatedPaper!.list].sort((a, b) => {
       const typeDiff = typePriority(a.type) - typePriority(b.type)
       if (typeDiff !== 0) return typeDiff
       return (a.difficulty ?? 0) - (b.difficulty ?? 0)
     })
 
     if (sortedList.length === 0) {
-      alert('题库不足，未能生成试卷')
+      showError('题库不足，未能生成试卷')
       return
     }
-    if (generatedPaper.shortfall) {
+    if (state.generatedPaper!.shortfall) {
       DOMS.randomResultMessage.innerText =
-        `试题抽完，距离目标还差 ${generatedPaper.shortfall} 分`
+        `试题抽完，距离目标还差 ${state.generatedPaper!.shortfall} 分`
       randomResultMessageDisplay(false)
     }
-    renderQuestionPage(sortedList, generatedPaper.totalScore, generatedPaper.shortfall)
-    alert('已生成试卷')
+    renderQuestionPage(sortedList, state.generatedPaper!.totalScore, state.generatedPaper!.shortfall)
+    showSuccess('已生成试卷')
 
   }
 
@@ -228,25 +239,26 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  async function handleExport() {
-    if (!generatedPaper || generatedPaper.list.length === 0) {
+  async function handleExport(state: HomeAppState) {
+    if (!state.generatedPaper || state.generatedPaper.list.length === 0) {
       return
     }
 
-    const label = (await getAllRoles()).find(i => i.id === DOMS.roleSelect.value)!.name
+    const roles = await state.getRoles()
+    const label = roles.find(i => i.id === DOMS.roleSelect.value)!.name
     const timestamp = new Date()
       .toISOString()
       .replace(/[-:]/g, '')
       .slice(0, 15)
 
     const examDoc = buildDoc(
-      `${label} 随机试卷（总分 ${generatedPaper.totalScore}）`,
-      generatedPaper.list,
+      `${label} 随机试卷（总分 ${state.generatedPaper.totalScore}）`,
+      state.generatedPaper.list,
       false,
     )
     const answerDoc = buildDoc(
       `${label} 参考答案`,
-      generatedPaper.list,
+      state.generatedPaper.list,
       true,
     )
 
@@ -259,10 +271,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
   // 应用初始化
-  async function init() {
-    const roles = await getAllRoles();
-    rolesSelectorRedner(roles);
+  async function init(state: HomeAppState) {
+    const roles = await state.getRoles();
+    rolesSelectorRender(roles, state);
   }
 
-  init()
+  init(appState)
 })

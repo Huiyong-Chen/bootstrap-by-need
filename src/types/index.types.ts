@@ -52,3 +52,11 @@ export interface RoleInfoRecord extends RoleInfo {
   createdAt: number; // 创建时间戳
   updatedAt: number; // 更新时间戳
 }
+
+// 角色表单数据（不包含id，会自动生成）
+export type RoleFormData = Omit<RoleInfo, 'id'>;
+
+// 手动导入表单数据
+export interface ManualFormData {
+  questions: string;
+}

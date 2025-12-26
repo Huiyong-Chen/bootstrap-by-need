@@ -1,14 +1,12 @@
-import { groupQuestionsByType, parseAndValidateQuestions } from "../datas/questions.js";
 import { addRole, getAllRoles } from "../datas/roles.js";
 import { DOMS, existingRolesCtnDisplay, importBtnActive, importerSectionDisplay, importFormCtnDisplay, importPlaceholderDisplay, manualBtnActive, manualFormDisplay } from "../doms/import-questions.js";
 import { eventListener } from "../events/index.js";
-import { saveQuestionBankByRole } from "../indexed-db/index.js";
 import { RoleInfo, RoleInfoRecord } from "../types/index.types.js";
+import { RoleFormHandler } from "../handlers/roleFormHandler.js";
+import { QuestionImportHandler } from "../handlers/questionImportHandler.js";
 
 
 window.addEventListener("DOMContentLoaded", () => {
-
-
   // #region =============== 返回按钮 ===============
   DOMS.backBtn.onclick = (e) => {
     if (history.length > 1) {
@@ -20,7 +18,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // #region =============== 人员选择器 ===============
 
-  eventListener.on("role:add", appendSelectiorOption);
+  eventListener.on("role:add", appendSelectorOption);
 
   DOMS.roleSelect.onchange = roleSelectChange;
 
@@ -35,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // 人员选择器渲染
-  function rolesSelectorRedner(roles: RoleInfoRecord[]) {
+  function rolesSelectorRender(roles: RoleInfoRecord[]) {
     if (roles.length) {
       const fragment = document.createDocumentFragment();
       for (const role of roles) {
@@ -56,9 +54,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function appendSelectiorOption(role: RoleInfoRecord) {
+  function appendSelectorOption(role: RoleInfoRecord) {
     if (DOMS.existingRolesCtn.classList.contains("hidden")) {
-      rolesSelectorRedner([role]);
+      rolesSelectorRender([role]);
     } else {
       const optionEle = document.createElement("option") as HTMLOptionElement;
       (optionEle.value = role.id), (optionEle.innerText = role.name);
@@ -68,17 +66,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // #endregion ============ 返回按钮 ===============
 
   // #region =============== 新增人员表单提交 ===============
-  DOMS.createRoleForm.onsubmit = async (e) => {
-    e.preventDefault(); // 阻止默认提交
-    const fd = new FormData(DOMS.createRoleForm);
-    const data = Object.fromEntries(fd);
-    await addRole(data as unknown as RoleInfo);
-    DOMS.createRoleForm.reset();
-  };
-  DOMS.createRoleForm.oninput = () => {
-    DOMS.createRoleFormSubmitBtm.disabled =
-      !DOMS.createRoleForm.checkValidity();
-  };
+  DOMS.createRoleForm.onsubmit = (e) =>
+    RoleFormHandler.handleCreateRoleSubmit(e, DOMS.createRoleForm);
+
+  DOMS.createRoleForm.oninput =
+    RoleFormHandler.handleCreateRoleInput(DOMS.createRoleForm, DOMS.createRoleFormSubmitBtm);
   // #endregion ============ 表单提交 ===============
 
   // #region =============== 导入题库 ===============
@@ -99,105 +91,27 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   // 手动输入表单
-  DOMS.manualForm.onsubmit = async (e) => {
-    e.preventDefault(); // 阻止默认提交
+  DOMS.manualForm.onsubmit = (e) =>
+    QuestionImportHandler.handleManualImportSubmit(
+      e,
+      DOMS.manualForm,
+      DOMS.roleSelect,
+      DOMS.manualSubmitBtn
+    );
 
-    if (!DOMS.roleSelect.value) {
-      alert("请先选择岗位");
-      return;
-    }
-
-    const fd = new FormData(DOMS.manualForm);
-    const { questions: questionsStr } = Object.fromEntries(fd) as unknown as {
-      questions: string;
-    };
-    if (!questionsStr.trim()) {
-      alert("请输入题目数据");
-      return;
-    }
-    DOMS.manualSubmitBtn.disabled = true;
-    try {
-      // 检查并转换数据
-      const result = parseAndValidateQuestions(questionsStr);
-      if (!result.success || !result.questions) {
-        throw new Error(result.error || "导入失败");
-      }
-      // 按题型分组
-      const grouped = groupQuestionsByType(result.questions);
-
-      await saveQuestionBankByRole(DOMS.roleSelect.value, grouped);
-
-      DOMS.manualForm.reset();
-
-      const isComfirm = confirm(`成功导入 ${result.questions.length} 道题目， 是否前去导出题型`);
-      if (isComfirm) {
-        DOMS.backBtn.click();
-      }
-    } catch (error) {
-      alert(error as unknown as string);
-    } finally {
-      DOMS.manualSubmitBtn.disabled = false;
-    }
-  };
-  DOMS.manualForm.oninput = () => {
-    DOMS.manualSubmitBtn.disabled = !DOMS.manualForm.checkValidity();
-  };
+  DOMS.manualForm.oninput =
+    QuestionImportHandler.handleManualImportInput(DOMS.manualForm, DOMS.manualSubmitBtn);
 
   // 文件导入
-  DOMS.importFileInput.onchange = async (e) => {
-    if (!DOMS.roleSelect.value) {
-      alert("请先选择岗位");
-      return;
-    }
-
-    const file = (e.target! as HTMLInputElement).files?.[0];
-    if (!file) {
-      return;
-    }
-
-    DOMS.importFileInput.disabled = true;
-
-    try {
-      const text = await file.text();
-      const result = parseAndValidateQuestions(text);
-
-      if (!result.success || !result.questions) {
-        alert(result.error || "导入失败");
-
-        DOMS.importFileInput.disabled = false;
-        return;
-      }
-
-      // 按题型分组
-      const grouped = groupQuestionsByType(result.questions);
-
-      // 保存到 IndexedDB
-      await saveQuestionBankByRole(DOMS.roleSelect.value, grouped);
-
-      const isComfirm = confirm(`成功导入 ${result.questions.length} 道题目， 是否前去导出题型`);
-      if (isComfirm) {
-        DOMS.backBtn.click();
-      }
-
-      // 清除文件输入
-      DOMS.importFileInput.value = "";
-
-    } catch (error) {
-      alert(
-        `导入失败：${error instanceof Error ? error.message : "未知错误"}`
-      );
-    } finally {
-
-      DOMS.importFileInput.disabled = false;
-    }
-  };
+  DOMS.importFileInput.onchange = (e) =>
+    QuestionImportHandler.handleFileImportChange(e, DOMS.roleSelect, DOMS.importFileInput);
 
   // #endregion ============ 导入题库 ===============
 
 
   async function init() {
     const roles = await getAllRoles();
-    rolesSelectorRedner(roles);
+    rolesSelectorRender(roles);
   }
 
   init()
