@@ -64,3 +64,4 @@ class EventListener {
     }
 }
 export const eventListener = new EventListener();
+//# sourceMappingURL=index.js.map

@@ -4,8 +4,10 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "pnpm build & live-server .",
-    "build": "tsc -w",
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc && cp src/utils/docx.js dist/utils/",
+    "build:dev": "pnpm build && tsc -w",
+    "dev": "pnpm build:dev & live-server .",
     "serve": "live-server ."
   },
   "keywords": [],

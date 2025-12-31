@@ -96,7 +96,7 @@ export function buildDoc(
   })
 }
 
-export const downloadDoc = async (doc: Document, filename: string) => {
+export const downloadDoc = async (doc: docx.Document, filename: string) => {
   const blob = await docx.Packer.toBlob(doc)
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')

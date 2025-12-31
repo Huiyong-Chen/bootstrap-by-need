@@ -80,3 +80,4 @@ export const downloadDoc = async (doc, filename) => {
     link.click();
     URL.revokeObjectURL(url);
 };
+//# sourceMappingURL=docExporter.js.map

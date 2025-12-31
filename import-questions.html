@@ -6,7 +6,15 @@
     <title>导入题库</title>
 
     <link rel="stylesheet" href="./src/styles/index.css" />
-    <link rel="stylesheet" href="./src/styles/app.css" />
+    <link
+      rel="stylesheet"
+      href="./src/pages/import-questions/import-questions.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./src/components/roleSelector/roleSelector.css"
+    />
+    <link rel="stylesheet" href="./src/components/modal/modal.css" />
   </head>
   <body>
     <div id="root">
@@ -34,7 +42,7 @@
                         name="id"
                         required
                         placeholder="岗位 ID（唯一标识）"
-                        class="text-input"
+                        class="text-input input"
                         type="text"
                       />
                     </div>
@@ -43,7 +51,7 @@
                         name="name"
                         required
                         placeholder="显示名称（可选，默认使用 ID）"
-                        class="text-input"
+                        class="text-input input"
                         type="text"
                       />
                     </div>
@@ -102,6 +110,25 @@
 ]'
                       rows="12"
                     ></textarea>
+                    <div class="import-options">
+                      <label class="option-label">
+                        <input
+                          type="radio"
+                          name="manualImportMode"
+                          value="overwrite"
+                          checked
+                        />
+                        覆盖现有题库
+                      </label>
+                      <label class="option-label">
+                        <input
+                          type="radio"
+                          name="manualImportMode"
+                          value="append"
+                        />
+                        追加到现有题库
+                      </label>
+                    </div>
                     <button id="manualSubmitBtn" class="import-button" disabled>
                       导入题目
                     </button>
@@ -116,6 +143,25 @@
                         type="file"
                       />
                     </label>
+                    <div class="import-options">
+                      <label class="option-label">
+                        <input
+                          type="radio"
+                          name="fileImportMode"
+                          value="overwrite"
+                          checked
+                        />
+                        覆盖现有题库
+                      </label>
+                      <label class="option-label">
+                        <input
+                          type="radio"
+                          name="fileImportMode"
+                          value="append"
+                        />
+                        追加到现有题库
+                      </label>
+                    </div>
                     <p class="file-hint">
                       请选择包含题目数组的 JSON 文件，格式与手动输入相同（id
                       字段不需要提供，系统会自动生成）
@@ -128,6 +174,9 @@
         </div>
       </div>
     </div>
-    <script type="module" src="./dist/import-questions/index.js"></script>
+    <script
+      type="module"
+      src="./dist/pages/import-questions/import-questions.js"
+    ></script>
   </body>
 </html>

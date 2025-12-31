@@ -1,0 +1,45 @@
+/* RoleSelector 组件样式 */
+
+/* 岗位选择器 */
+.role-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.role-selector label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.select-input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.select-input:hover {
+  border-color: #667eea;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #667eea;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  width: fit-content;
+}

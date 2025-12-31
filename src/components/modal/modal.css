@@ -1,0 +1,188 @@
+/* Modal 组件样式 */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-slide-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 1000;
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  min-width: 320px;
+  max-width: 500px;
+  z-index: 1001;
+  display: none;
+  animation: modal-slide-in 0.3s ease-out;
+}
+
+.modal-content {
+  padding: 0;
+  position: relative;
+}
+
+.modal-title {
+  padding: 24px 24px 0 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 16px;
+}
+
+.modal-body {
+  padding: 0 24px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a5568;
+  margin-bottom: 24px;
+}
+
+.modal-footer {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.modal-btn-cancel {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-btn-cancel:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.modal-btn-confirm {
+  background: #667eea;
+  color: white;
+}
+
+.modal-btn-confirm:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.modal-btn-info {
+  background: #667eea;
+}
+
+.modal-btn-success {
+  background: #48bb78;
+}
+
+.modal-btn-success:hover {
+  background: #38a169;
+}
+
+.modal-btn-warning {
+  background: #ed8936;
+}
+
+.modal-btn-warning:hover {
+  background: #dd6b20;
+}
+
+.modal-btn-error {
+  background: #f56565;
+}
+
+.modal-btn-error:hover {
+  background: #e53e3e;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #a0aec0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: #f7fafc;
+  color: #4a5568;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+  .modal-container {
+    min-width: 280px;
+    max-width: 90vw;
+    margin: 20px;
+  }
+
+  .modal-title {
+    font-size: 16px;
+    padding: 20px 20px 0 20px;
+  }
+
+  .modal-body {
+    font-size: 14px;
+    padding: 0 20px;
+  }
+
+  .modal-footer {
+    padding: 0 20px 20px 20px;
+    flex-direction: column;
+  }
+
+  .modal-btn {
+    width: 100%;
+  }
+}

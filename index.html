@@ -1,121 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>随机题库</title>
+    <link rel="stylesheet" href="./src/styles/index.css" />
+    <link rel="stylesheet" href="./src/pages/home/home.css" />
+    <link
+      rel="stylesheet"
+      href="./src/components/roleSelector/roleSelector.css"
+    />
+    <link rel="stylesheet" href="./src/components/modal/modal.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>随机题库</title>
-  <link rel="stylesheet" href="./src/styles/index.css" />
-  <link rel="stylesheet" href="./src/styles/app.css" />
-</head>
-
-<body>
-  <div id="root">
-    <div class="app-container">
-      <header class="app-header">
-        <div class="header-container">
-          <h1 class="app-title">随机题库生成器</h1>
-          <p class="app-subtitle">从本地题库抽题，导出 Word（试卷 & 答案）</p>
-        </div>
-        <a href="./import-questions.html" class="import-button-header">
-          导入题库
-        </a>
-      </header>
-      <main class="app-main">
-        <section class="config-section">
-          <div class="section-header">
-            <h2 class="section-title">步骤 1：选择岗位</h2>
+  <body>
+    <div id="root">
+      <div class="app-container">
+        <header class="app-header">
+          <div class="header-container">
+            <h1 class="app-title">随机题库生成器</h1>
+            <p class="app-subtitle">从本地题库抽题，导出 Word（试卷 & 答案）</p>
           </div>
-          <div class="section-content">
-            <div id="emptyRole" class="empty-role-state">
-              <p>暂无题库数据，请先导入题库</p>
-              <a href="./import-questions.html" class="primary-button">
-                前往导入
-              </a>
+          <a href="./import-questions.html" class="import-button-header">
+            导入题库
+          </a>
+        </header>
+        <main class="app-main">
+          <section class="config-section">
+            <div class="section-header">
+              <h2 class="section-title">步骤 1：选择岗位</h2>
             </div>
-            <div id="roleSelector" class="role-selector hidden">
-              <label for="roleSelect">选择岗位</label>
-              <select id="roleSelect" class="select-input">
-                <option value="">请选择岗位</option>
-              </select>
-              <div id="roleBadge" class="role-badge">当前岗位：前端开发</div>
-            </div>
-          </div>
-        </section>
-        <section id="weightConfig" class="config-section hidden">
-          <div class="section-header">
-            <h2 class="section-title">步骤 2：设置参数</h2>
-          </div>
-          <div class="section-content">
-            <div class="ratio-settings">
-              <div class="settings-grid">
-                <div class="setting-item">
-                  <label for="targetScore">目标总分</label>
-                  <input id="targetScore" min="1" class="number-input" type="number" value="100">
-                  <small class="hint-text">达到该分数即停止抽题，可能略有超出</small>
-                </div>
-                <div class="setting-item"><label>权重</label>
-                  <small class="hint-text">权重仅用于抽题概率，可不等于100</small>
-                </div>
+            <div class="section-content">
+              <div id="emptyRole" class="empty-role-state">
+                <p>暂无题库数据，请先导入题库</p>
+                <a href="./import-questions.html" class="primary-button">
+                  前往导入
+                </a>
               </div>
-              <div class="weight-explanation">
-                <loadQuestionBanksh3>权重说明</h3>
+              <div id="roleSelector" class="role-selector hidden">
+                <label for="roleSelect">选择岗位</label>
+                <select id="roleSelect" class="select-input">
+                  <option value="">请选择岗位</option>
+                </select>
+                <div id="roleBadge" class="role-badge">当前岗位：前端开发</div>
+              </div>
+            </div>
+          </section>
+          <section id="weightConfig" class="config-section hidden">
+            <div class="section-header">
+              <h2 class="section-title">步骤 2：设置参数</h2>
+            </div>
+            <div class="section-content">
+              <div class="ratio-settings">
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label for="targetScore">目标总分</label>
+                    <input
+                      id="targetScore"
+                      min="1"
+                      class="input"
+                      type="number"
+                      value="100"
+                    />
+                    <small class="hint-text"
+                      >达到该分数即停止抽题，可能略有超出</small
+                    >
+                  </div>
+                  <div class="setting-item">
+                    <label>权重</label>
+                    <small class="hint-text"
+                      >权重仅用于抽题概率，可不等于100</small
+                    >
+                  </div>
+                </div>
+                <div class="weight-explanation">
+                  <h3>权重说明</h3>
                   <div class="explanation-content">
-                    <p><strong>权重的作用：</strong>权重用于控制各题型的抽题概率。权重越大，该题型被抽中的概率越高。</p>
-                    <p><strong>示例：</strong>示例：如果单选题权重为 30，判断题权重为 20，简答题权重为 50，则抽题时：</p>
+                    <p>
+                      <strong>权重的作用：</strong
+                      >权重用于控制各题型的抽题概率。权重越大，该题型被抽中的概率越高。
+                    </p>
+                    <p>
+                      <strong>示例：</strong>示例：如果单选题权重为
+                      30，判断题权重为 20，简答题权重为 50，则抽题时：
+                    </p>
                     <ul>
                       <li>单选题被抽中的概率 = 30 / (30 + 20 + 50) = 30%</li>
                       <li>判断题被抽中的概率 = 20 / (30 + 20 + 50) = 20%</li>
                       <li>简答题被抽中的概率 = 50 / (30 + 20 + 50) = 50%</li>
                     </ul>
-                    <p><strong>注意：</strong>注意：权重不需要总和为 100，系统会自动按比例计算概率。</p>
+                    <p>
+                      <strong>注意：</strong>注意：权重不需要总和为
+                      100，系统会自动按比例计算概率。
+                    </p>
                   </div>
-              </div>
-              <div class="ratio-list-ctn">
-                <h3>题型权重设置</h3>
-                <form id="ratioList" class="ratio-list">
-                </form>
-                <div id="totalRatio" class="total-ratio-display">总权重：0</div>
-              </div>
-            </div>
-            <div class="action-group">
-              <button id="randomBtn" disabled class="primary-button" type="submit">随机生成</button>
-              <div id="randomResultMessage" class="message warn hidden">试题抽完，距离目标还差 100 分</div>
-            </div>
-          </div>
-        </section>
-        <section id="generatePager" class="config-section hidden">
-          <div class="section-header">
-            <h2 class="section-title">步骤 3：预览与导出</h2>
-          </div>
-          <div class="section-content">
-            <div class="paper-preview">
-              <div class="paper-summary">
-                <div class="summary-item">
-                  <span class="summary-label">题目数：</span>
-                  <span id="questionCount" class="summary-value">0</span>
                 </div>
-                <div class="summary-item">
-                  <span class="summary-label">总分：</span>
-                  <span id="totalScore" class="summary-value">0</span>
-                </div>
-                <div id="remainingScoreCtn" class="summary-item warn">
-                  <span class="summary-label">提示：</span>
-                  <span id="remainingScore" class="summary-value">题库已用尽，距离目标还差 93 分</span>
+                <div class="ratio-list-ctn">
+                  <h3>题型权重设置</h3>
+                  <form id="ratioList" class="ratio-list"></form>
+                  <div id="totalRatio" class="total-ratio-display">
+                    总权重：0
+                  </div>
                 </div>
               </div>
-              <div class="question-list-ctn">
-                <h3>题目预览</h3>
-                <div id="questionList" class="question-list"></div>
+              <div class="action-group">
+                <button
+                  id="randomBtn"
+                  disabled
+                  class="primary-button"
+                  type="submit"
+                >
+                  随机生成
+                </button>
+                <div id="randomResultMessage" class="message warn hidden">
+                  试题抽完，距离目标还差 100 分
+                </div>
               </div>
-              <div id="exportQuestionsPager" class="export-section"><button class="export-button">导出 Word（试卷 + 答案）</button></div>
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+          <section id="generatePager" class="config-section hidden">
+            <div class="section-header">
+              <h2 class="section-title">步骤 3：预览与导出</h2>
+            </div>
+            <div class="section-content">
+              <div class="paper-preview">
+                <div class="paper-summary">
+                  <div class="summary-item">
+                    <span class="summary-label">题目数：</span>
+                    <span id="questionCount" class="summary-value">0</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-label">总分：</span>
+                    <span id="totalScore" class="summary-value">0</span>
+                  </div>
+                  <div id="remainingScoreCtn" class="summary-item warn">
+                    <span class="summary-label">提示：</span>
+                    <span id="remainingScore" class="summary-value"
+                      >题库已用尽，距离目标还差 93 分</span
+                    >
+                  </div>
+                </div>
+                <div class="question-list-ctn">
+                  <h3>题目预览</h3>
+                  <div id="questionList" class="question-list"></div>
+                </div>
+                <div id="exportQuestionsPager" class="export-section">
+                  <button class="export-button">
+                    导出 Word（试卷 + 答案）
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
-  </div>
-  <script type="module" src="./dist/home/index.js"></script>
-</body>
-
+    <script type="module" src="./dist/pages/home/home.js"></script>
+  </body>
 </html>

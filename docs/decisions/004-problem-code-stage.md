@@ -15,17 +15,17 @@
 
 ## 具体问题记录
 
-### 拼写错误
-- 函数名 `rolesSelectorRedner` 应为 `rolesSelectorRender`
-- 出现在 `src/home/index.ts` 和 `src/import-questions/index.ts` 中
-
 ### 作用域问题
 - `questionRatioList` 在事件监听器中使用，但在函数内部定义
-- 可能导致页面加载时的 undefined 错误
+- 如果用户在 `renderQuestionsRatioAndPreviewExport` 执行前与表单交互，会导致 undefined 错误
 
 ### 代码冗余
-- `questionRatioList` 在多处被重复初始化为空对象
-- 增加了代码维护的复杂性
+- `questionRatioList` 被重复初始化为空对象
+- 在初始化后又重新赋值，增加了维护复杂度
+
+### 职责混乱
+- `src/pages/home/home.ts` 超过 380 行，承担过多职责
+- 包含 DOM 操作、数据处理、事件绑定、UI 渲染等多种功能
 
 ## 收益 (Positive)
 

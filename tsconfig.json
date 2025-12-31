@@ -4,10 +4,11 @@
     "module": "nodenext", // 保持 import/export
     "moduleResolution": "nodenext", //支持原生 ESM 的解析逻辑
     "outDir": "./dist", // 产物输出到 dist
-    "rootDir": "./src", // 源码在 srcØ
+    "rootDir": "./src", // 源码在 src
     "strict": true, //开启严格模式
     "skipLibCheck": true, // 跳过库文件检查，加速
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "sourceMap": true // 支持源码调试
   },
   "include": ["src/**/*"]
 }

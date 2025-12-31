@@ -1,0 +1,377 @@
+.import-button-header {
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.import-button-header:hover {
+  background: #5568d3;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.import-button-header:active {
+  transform: translateY(0);
+}
+
+/* 配置区域 */
+.config-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.section-content {
+  padding-top: 0.5rem;
+}
+
+.empty-role-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.empty-role-state p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 权重配置区域 */
+.ratio-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ratio-settings h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setting-item label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.hint-text {
+  color: #666;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* 权重说明 */
+.weight-explanation {
+  background: #f8f9ff;
+  border: 2px solid #e0e7ff;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.weight-explanation h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.explanation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.explanation-content p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.explanation-content ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.explanation-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* 题型权重列表 */
+.ratio-list-ctn,
+.ratio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ratio-list-ctn h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.ratio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.ratio-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ratio-item-info strong {
+  font-size: 1rem;
+  color: #333;
+}
+
+.ratio-item-info span {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.ratio-input {
+  width: 120px;
+  text-align: right;
+}
+
+.total-ratio-display {
+  padding: 0.75rem 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #667eea;
+  text-align: center;
+}
+
+/* 操作按钮组 */
+.action-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* 试卷预览 */
+.paper-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 试卷摘要 */
+.paper-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.summary-label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-item.warn .summary-value {
+  color: #f57c00;
+}
+
+.summary-item.success .summary-value {
+  color: #388e3c;
+}
+
+.remainingScoreCtn {
+  margin-top: 0.5rem;
+}
+
+/* 题目列表 */
+.question-list-ctn,
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.question-list-ctn h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.question-card {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.question-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+}
+
+.option-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #667eea;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.option-text {
+  flex: 1;
+  color: #555;
+  line-height: 1.6;
+}
+
+.question-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.meta-item.answer {
+  color: #388e3c;
+  font-weight: 600;
+}
+
+/* 导出区域 */
+.export-section {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.export-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.export-button:active {
+  transform: translateY(0);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .config-section {
+    padding: 1.5rem;
+  }
+
+  .ratio-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ratio-input {
+    width: 100%;
+  }
+}

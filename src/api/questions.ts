@@ -53,7 +53,7 @@ export function parseAndValidateQuestions(questionsStr: unknown) {
           type === QuestionTypeEnum.MultipleChoice) &&
         (!q.options || !q.options.length)
       ) {
-        return { success: false, error: `第 ${i + 1} 题缺少 optoins 字段` };
+        return { success: false, error: `第 ${i + 1} 题缺少 options 字段` };
       }
       if (
         typeof q.score !== "number" ||
@@ -152,13 +152,12 @@ export async function loadQuestionBanks(roleId: string) {
   return questionsByType
 }
 
-
 /**
- * 根据总分和权重随机生成题库
- * @param bank 
- * @param ratioInput 
- * @param targetScore 
- * @returns 
+ * 根据总分和权重随机生成试卷
+ * @param bank 题库数据，按题型分组
+ * @param ratios 各题型的权重配置
+ * @param targetScore 目标总分
+ * @returns 生成的试卷数据
  */
 export function generatePaper(
   bank: QuestionByType,
@@ -166,37 +165,58 @@ export function generatePaper(
   targetScore: number,
 ) {
   if (!bank) {
-    return { list: [], totalScore: 0 }
+    return { list: [], totalScore: 0 };
   }
 
-
-  const picker = buildWeightedPicker(ratios)
+  // 初始化可用题目池
   const available = Object.fromEntries(
     (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(([type, list]) => [type, [...list]]),
-  ) as Record<QuestionType, QuestionInfo[]>
+  ) as Record<QuestionType, QuestionInfo[]>;
 
-  const result: QuestionInfo[] = []
-  let total = 0
+  const result: QuestionInfo[] = [];
+  let total = 0;
 
   while (total < targetScore) {
-    const type = picker()
+    // 获取当前有权重且有题目的题型
+    const availableTypes = Object.entries(ratios)
+      .filter(([type, weight]) => weight > 0 && available[+type as QuestionType]?.length > 0)
+      .map(([type]) => +type as QuestionType);
+
+    if (availableTypes.length === 0) {
+      // 没有更多可选择的题型
+      break;
+    }
+
+    // 使用加权随机选择器从可用题型中选择
+    const picker = buildWeightedPicker(
+      Object.fromEntries(
+        availableTypes.map(type => [type, ratios[type] || 0])
+      ) as RatioMap
+    );
+
+    const type = picker();
     if (!type) {
-      break
+      break;
     }
-    const pool = available[type]
+
+    const pool = available[type];
     if (!pool || pool.length === 0) {
-      ratios[type] = 0
-      continue
+      // 该题型的题目已用完，从权重中移除
+      ratios[type] = 0;
+      continue;
     }
 
-    const chosen = randomPick(pool)
-    result.push(chosen)
-    total += chosen.score
-    available[type] = pool.filter((q) => q.id !== chosen.id)
+    // 选择题目
+    const chosen = randomPick(pool);
+    result.push(chosen);
+    total += chosen.score;
 
-    if (Object.values(available).every((list) => list.length === 0)) {
+    // 从可用池中移除已选择的题目
+    available[type] = pool.filter((q) => q.id !== chosen.id);
 
-      break
+    // 如果该题型题目已用完，从权重中移除
+    if (available[type].length === 0) {
+      ratios[type] = 0;
     }
   }
 
@@ -204,7 +224,7 @@ export function generatePaper(
     list: result,
     totalScore: total,
     shortfall: Math.max(targetScore - total, 0) || undefined,
-  }
+  };
 }
 
 function buildWeightedPicker(ratios: RatioMap) {
@@ -226,7 +246,5 @@ function buildWeightedPicker(ratios: RatioMap) {
   }
 }
 
-
-
 const randomPick = <T,>(items: T[]): T =>
-  items[Math.floor(Math.random() * items.length)]
+  items[Math.floor(Math.random() * items.length)];

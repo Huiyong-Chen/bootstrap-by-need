@@ -22,7 +22,7 @@
    - 映射关系：1 TS 文件 = 1 JS 文件 (保留目录结构)。
 4. **TSConfig 核心设置**：
    - `"target": "ESNext"` (保留现代语法)
-   - `"module": "ESNext"` (保留 import/export，交给浏览器处理)
+   - `"module": "NodeNext"` (使用 Node.js 的 ESM 解析逻辑)
    - `"moduleResolution": "NodeNext"`
 
 ### 收益 (Positive)

@@ -61,7 +61,6 @@ class EventListener<T extends Record<string, any[]> = Record<string, any[]>> {
   }
 
   /** 只监听一次 */
-
   once<K extends keyof T>(eventName: K, callback: Handler) {
     if (!this.events.has(eventName)) {
       this.events.set(eventName, new Set());

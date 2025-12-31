@@ -21,5 +21,7 @@ export async function addRole(role: RoleInfo) {
     const result = await saveRoleInfo(role);
     _roles.push(result);
     eventListener.emit("role:add", result);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to add role:", error);
+  }
 }
