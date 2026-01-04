@@ -1,4 +1,4 @@
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 export default defineConfig(({ mode }) => {
   console.log(mode);
@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
           home: resolve(import.meta.dirname, "index.html"),
           importQuestions: resolve(
             import.meta.dirname,
-            "import-questions.html"
+            "import-questions.html",
           ),
         },
         output: {

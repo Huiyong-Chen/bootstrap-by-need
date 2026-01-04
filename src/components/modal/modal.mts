@@ -1,9 +1,9 @@
-import "./modal.css";
+import './modal.css';
 // Modal 组件类型定义
 export interface ModalOptions {
   title?: string;
   content: string;
-  type?: "info" | "success" | "warning" | "error";
+  type?: 'info' | 'success' | 'warning' | 'error';
   showCancel?: boolean;
   confirmText?: string;
   cancelText?: string;
@@ -22,8 +22,8 @@ class ModalManager {
     if (this.isInitialized) return;
 
     // 创建遮罩层
-    this.overlayElement = document.createElement("div");
-    this.overlayElement.className = "modal-overlay";
+    this.overlayElement = document.createElement('div');
+    this.overlayElement.className = 'modal-overlay';
     this.overlayElement.style.cssText = `
       position: fixed;
       top: 0;
@@ -37,8 +37,8 @@ class ModalManager {
     `;
 
     // 创建 modal 容器
-    this.modalElement = document.createElement("div");
-    this.modalElement.className = "modal-container";
+    this.modalElement = document.createElement('div');
+    this.modalElement.className = 'modal-container';
     this.modalElement.style.cssText = `
       position: fixed;
       top: 50%;
@@ -62,32 +62,32 @@ class ModalManager {
   }
 
   private createModalContent(options: ModalOptions): HTMLElement {
-    const modalContent = document.createElement("div");
-    modalContent.className = "modal-content";
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
 
     // 标题
     if (options.title) {
-      const titleElement = document.createElement("div");
-      titleElement.className = "modal-title";
+      const titleElement = document.createElement('div');
+      titleElement.className = 'modal-title';
       titleElement.textContent = options.title;
       modalContent.appendChild(titleElement);
     }
 
     // 内容
-    const contentElement = document.createElement("div");
-    contentElement.className = "modal-body";
+    const contentElement = document.createElement('div');
+    contentElement.className = 'modal-body';
     contentElement.textContent = options.content;
     modalContent.appendChild(contentElement);
 
     // 按钮区域
-    const footerElement = document.createElement("div");
-    footerElement.className = "modal-footer";
+    const footerElement = document.createElement('div');
+    footerElement.className = 'modal-footer';
 
     // 取消按钮
     if (options.showCancel !== false) {
-      const cancelButton = document.createElement("button");
-      cancelButton.className = "modal-btn modal-btn-cancel";
-      cancelButton.textContent = options.cancelText || "取消";
+      const cancelButton = document.createElement('button');
+      cancelButton.className = 'modal-btn modal-btn-cancel';
+      cancelButton.textContent = options.cancelText ?? '取消';
       cancelButton.onclick = () => {
         this.hide();
         options.onCancel?.();
@@ -96,11 +96,9 @@ class ModalManager {
     }
 
     // 确认按钮
-    const confirmButton = document.createElement("button");
-    confirmButton.className = `modal-btn modal-btn-confirm modal-btn-${
-      options.type || "info"
-    }`;
-    confirmButton.textContent = options.confirmText || "确定";
+    const confirmButton = document.createElement('button');
+    confirmButton.className = `modal-btn modal-btn-confirm modal-btn-${options.type ?? 'info'}`;
+    confirmButton.textContent = options.confirmText ?? '确定';
     confirmButton.onclick = () => {
       this.hide();
       options.onConfirm?.();
@@ -111,9 +109,9 @@ class ModalManager {
 
     // 关闭按钮
     if (options.closable !== false) {
-      const closeButton = document.createElement("button");
-      closeButton.className = "modal-close";
-      closeButton.innerHTML = "×";
+      const closeButton = document.createElement('button');
+      closeButton.className = 'modal-close';
+      closeButton.innerHTML = '×';
       closeButton.onclick = () => {
         this.hide();
         options.onCancel?.();
@@ -130,25 +128,25 @@ class ModalManager {
     if (!this.modalElement || !this.overlayElement) return;
 
     // 清空之前的内容
-    this.modalElement.innerHTML = "";
+    this.modalElement.innerHTML = '';
 
     // 创建新的内容
     const content = this.createModalContent(options);
     this.modalElement.appendChild(content);
 
     // 显示 modal
-    this.overlayElement.style.display = "block";
-    this.modalElement.style.display = "block";
+    this.overlayElement.style.display = 'block';
+    this.modalElement.style.display = 'block';
 
     // 添加 ESC 键监听
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         this.hide();
         options.onCancel?.();
-        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener('keydown', handleEscape);
       }
     };
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
 
     // 点击遮罩关闭
     this.overlayElement.onclick = () => {
@@ -160,8 +158,8 @@ class ModalManager {
   hide() {
     if (!this.modalElement || !this.overlayElement) return;
 
-    this.overlayElement.style.display = "none";
-    this.modalElement.style.display = "none";
+    this.overlayElement.style.display = 'none';
+    this.modalElement.style.display = 'none';
   }
 }
 
@@ -176,11 +174,11 @@ export const Modal = {
   alert: (content: string, title?: string): Promise<void> => {
     return new Promise((resolve) => {
       modalManager.show({
-        title: title || "提示",
+        title: title ?? '提示',
         content,
-        type: "info",
+        type: 'info',
         showCancel: false,
-        confirmText: "确定",
+        confirmText: '确定',
         onConfirm: resolve,
       });
     });
@@ -192,12 +190,12 @@ export const Modal = {
   confirm: (content: string, title?: string): Promise<boolean> => {
     return new Promise((resolve) => {
       modalManager.show({
-        title: title || "确认",
+        title: title ?? '确认',
         content,
-        type: "warning",
+        type: 'warning',
         showCancel: true,
-        confirmText: "确定",
-        cancelText: "取消",
+        confirmText: '确定',
+        cancelText: '取消',
         onConfirm: () => resolve(true),
         onCancel: () => resolve(false),
       });

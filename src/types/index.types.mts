@@ -6,16 +6,15 @@ export const QuestionTypeEnum = {
   ShortAnswer: 5,
 } as const;
 
-export type QuestionType =
-  (typeof QuestionTypeEnum)[keyof typeof QuestionTypeEnum];
+export type QuestionType = (typeof QuestionTypeEnum)[keyof typeof QuestionTypeEnum];
 
 /** 题目类型(中文) */
 export const QuestionTypeChineseName: Record<QuestionType, string> = {
-  1: "单选题",
-  2: "多选题",
-  3: "判断题",
-  4: "填空题",
-  5: "简答题",
+  1: '单选题',
+  2: '多选题',
+  3: '判断题',
+  4: '填空题',
+  5: '简答题',
 };
 
 export const QuestionTypeOrder: QuestionType[] = [
@@ -24,7 +23,7 @@ export const QuestionTypeOrder: QuestionType[] = [
   QuestionTypeEnum.TrueFalse,
   QuestionTypeEnum.FillBlank,
   QuestionTypeEnum.ShortAnswer,
-]
+];
 
 /** 问题信息 */
 export interface QuestionInfo {
@@ -37,7 +36,7 @@ export interface QuestionInfo {
   difficulty: number;
 }
 
-export type RawQuestion = Omit<QuestionInfo, "id">;
+export type RawQuestion = Omit<QuestionInfo, 'id'>;
 
 export type QuestionByType = Record<QuestionType, QuestionInfo[]>;
 export type QuestionBanks = Record<string, QuestionByType>;

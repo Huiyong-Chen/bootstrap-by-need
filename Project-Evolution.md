@@ -1,9 +1,23 @@
 # 📈 项目演进记录 (Project Evolution)
 
-本文档记录本项目如何从“一无所有”逐步生长出“工程复杂度”的过程。
+本文档记录本项目如何从"一无所有"逐步生长出"工程复杂度"的过程。
 这里的每一个阶段，都对应着一次**架构师的思维转变**。
 
+## 🏗️ 工程化里程碑总览
+
+| 阶段        | 时间节点   | 核心成就   | 技术栈演进                             | 文档                                                                            |
+| ----------- | ---------- | ---------- | -------------------------------------- | ------------------------------------------------------------------------------- |
+| **Stage 1** | 项目启动   | 纯原生开发 | HTML + CSS + JS                        | [决策文档](./docs/decisions/001-initial-setup.md)                               |
+| **Stage 2** | 业务复杂化 | ESM模块化  | `<script type="module">` + HTTP Server | [决策文档](./docs/decisions/002-native-esm-and-local-server.md)                 |
+| **Stage 3** | 多人协作前 | 类型系统   | TypeScript + 手动编译                  | [决策文档](./docs/decisions/003-adopt-typescript-without-bundling.md)           |
+| **Stage 4** | 重构准备   | 问题记录   | 故意保留问题代码                       | [决策文档](./docs/decisions/004-problem-code-stage.md)                          |
+| **Stage 5** | 功能扩展   | 现代化架构 | 组件化 + IndexedDB + 分层架构          | [决策文档](./docs/decisions/005-architecture-refactor-and-feature-expansion.md) |
+| **Stage 6** | 性能优化   | 构建工具链 | Vite + MPA + 代码分割                  | [决策文档](./docs/decisions/006-modern-build-architecture.md)                   |
+| **Stage 7** | 质量管控   | 标准化体系 | ESLint + Prettier + Husky + Commitlint | [决策文档](./docs/decisions/007-quality-and-standardization.md)                 |
+
 ---
+
+## 📖 详细阶段记录
 
 ## Stage 1: 原生初开 (The Primitive Era)
 
@@ -197,6 +211,57 @@
 
 - `docs/decisions/006-modern-build-architecture.md` - 现代构建架构决策详情
 - `docs/innerOS/006-growing-pains-and-toolchains.md` - 工具链觉醒的心路历程
+
+---
+
+## Stage 7: 代码质量与标准化 (Quality & Standardization)
+
+> **时期**：现代工具链完善后，代码质量管控期
+> **核心哲学**：**秩序不再是负担，而是效率的基石。**
+
+### 🚨 遇到的痛点
+
+1. **语法冲突**：`.mts` 文件中泛型 `<T>` 被误识别为 JSX 标签。
+2. **风格不一**：代码格式化不统一，影响团队协作。
+3. **质量缺失**：缺少自动化检查，易引入低级错误。
+4. **提交混乱**：Git 提交信息不规范，历史难以阅读。
+
+### 🛠 解决方案
+
+- **代码质量工具链**：引入 ESLint v9 (Flat Config) + Prettier，解决语法冲突和格式问题。
+- **Git 钩子自动化**：配置 Husky + lint-staged，实现提交前自动检查和修复。
+- **提交规范管控**：集成 Commitlint，确保 Git 历史可读性。
+- **配置文件标准化**：使用 `.mts` 后缀统一配置语言，享受类型提示。
+
+### 📝 架构决策
+
+- ✅ **ESLint v9 Flat Config**：现代配置格式，内置 TypeScript 支持，解决 `.mts` 语法歧义。
+- ✅ **Prettier 集成**：`trailingComma: "all"` 解决泛型冲突，统一代码风格。
+- ✅ **自动化执法**：pre-commit 钩子拦截问题代码，commit-msg 校验提交格式。
+- ✅ **类型安全配置**：所有配置文件使用 TypeScript，获得完整类型检查。
+- ⚠️ **学习成本**：团队需要适应新的工作流和规范。
+
+### 📊 优化成果
+
+- **类型安全**：消除 `any` 类型，完善事件系统类型绑定。
+- **代码一致性**：所有代码自动格式化，风格统一。
+- **质量保障**：自动化拦截潜在 Bug 和不规范代码。
+- **开发效率**：减少 Code Review 中的格式争论，专注业务逻辑。
+
+### 💭 架构师的顿悟
+
+**秩序的崩塌**：Stage 6 升级导致 `.mts` 语法冲突，原本隐蔽的问题暴露。认知负荷本该花在业务逻辑上，却消耗在分号和缩进上。
+
+**代码即法律**：不是写在 Wiki 的规范文档，而是可执行的法律。Prettier 是排版工，ESLint 是检察官，Husky 是警察。
+
+**执法与仪式感**：bad code 甚至没有资格进入暂存区。每次提交都是对代码库的郑重交付，必须清晰、规范、负责。
+
+**从自律走向法治**：Stage 7 没有产出业务功能，却让项目从"能跑的草台班子"变成了"正规军"。
+
+### 📚 相关文档
+
+- `docs/decisions/007-quality-and-standardization.md` - 代码质量标准化决策详情
+- `docs/innerOS/007-law-and-order.md` - 从自律走向法治的心路历程
 
 ### 💡 如何维护这份文档
 

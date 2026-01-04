@@ -1,9 +1,9 @@
-import { RoleInfoRecord } from "@/types/index.types.mts";
+import { RoleInfoRecord } from '@/types/index.types.mts';
 import {
   createFragmentWithElements,
   createOptionElement,
   toggleHiddenClass,
-} from "@/utils/domHelpers.mts";
+} from '@/utils/domHelpers.mts';
 
 /**
  * 角色选择器组件
@@ -23,17 +23,13 @@ export interface RoleSelectorConfig {
  * @param roles 角色列表
  * @param config 配置对象
  */
-export function renderRoleSelector(
-  roles: RoleInfoRecord[],
-  config: RoleSelectorConfig
-): void {
-  const { selectElement, containerElement, onRoleChange, emptyStateElement } =
-    config;
+export function renderRoleSelector(roles: RoleInfoRecord[], config: RoleSelectorConfig): void {
+  const { selectElement, containerElement, onRoleChange, emptyStateElement } = config;
 
   if (roles.length > 0) {
     // 创建包含所有选项的片段（默认空选项 + 角色选项）
     const allOptions = [
-      createOptionElement("", "请选择岗位"), // 默认空选项
+      createOptionElement('', '请选择岗位'), // 默认空选项
       ...roles.map((role) => createOptionElement(role.id, role.name)),
     ];
 
@@ -56,7 +52,7 @@ export function renderRoleSelector(
     }
   } else {
     // 清空选项，只保留默认空选项
-    selectElement.replaceChildren(createOptionElement("", "请选择岗位"));
+    selectElement.replaceChildren(createOptionElement('', '请选择岗位'));
 
     // 隐藏选择器，显示空状态
     toggleHiddenClass(containerElement, true);
@@ -71,17 +67,14 @@ export function renderRoleSelector(
  * @param role 新角色
  * @param config 配置对象
  */
-export function addRoleToSelector(
-  role: RoleInfoRecord,
-  config: RoleSelectorConfig
-): void {
+export function addRoleToSelector(role: RoleInfoRecord, config: RoleSelectorConfig): void {
   const { selectElement, containerElement } = config;
 
   const optionElement = createOptionElement(role.id, role.name);
   selectElement.appendChild(optionElement);
 
   // 如果之前没有角色，现在有了，需要显示选择器
-  if (containerElement.classList.contains("hidden")) {
+  if (containerElement.classList.contains('hidden')) {
     toggleHiddenClass(containerElement, false);
   }
 }
@@ -91,9 +84,6 @@ export function addRoleToSelector(
  * @param badgeElement 徽章元素
  * @param roleName 角色名称
  */
-export function updateRoleBadge(
-  badgeElement: HTMLElement,
-  roleName: string
-): void {
+export function updateRoleBadge(badgeElement: HTMLElement, roleName: string): void {
   badgeElement.textContent = `当前岗位：${roleName}`;
 }

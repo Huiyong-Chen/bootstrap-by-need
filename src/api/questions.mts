@@ -1,11 +1,11 @@
-import { getQuestionBankByRole } from "@/indexed-db/index.mts";
+import { getQuestionBankByRole } from '@/indexed-db/index.mts';
 import {
   QuestionByType,
   QuestionInfo,
   QuestionType,
   QuestionTypeEnum,
   RawQuestion,
-} from "@/types/index.types.mts";
+} from '@/types/index.types.mts';
 
 export type RatioMap = Partial<Record<QuestionType, number>>;
 
@@ -20,16 +20,16 @@ export function parseAndValidateQuestions(questionsStr: unknown) {
   try {
     let parsed: unknown;
 
-    if (typeof questionsStr === "string") {
+    if (typeof questionsStr === 'string') {
       parsed = JSON.parse(questionsStr);
     } else if (Array.isArray(questionsStr)) {
       parsed = questionsStr;
     } else {
-      return { success: false, error: "数据格式错误：必须是数组格式" };
+      return { success: false, error: '数据格式错误：必须是数组格式' };
     }
 
     if (!Array.isArray(parsed) || parsed.length === 0) {
-      return { success: false, error: "题目列表不能为空" };
+      return { success: false, error: '题目列表不能为空' };
     }
 
     // 验证每个题目
@@ -48,17 +48,12 @@ export function parseAndValidateQuestions(questionsStr: unknown) {
       }
       const type = toQuestionType(q.type);
       if (
-        (type === QuestionTypeEnum.SingleChoice ||
-          type === QuestionTypeEnum.MultipleChoice) &&
-        (!q.options || !q.options.length)
+        (type === QuestionTypeEnum.SingleChoice || type === QuestionTypeEnum.MultipleChoice) &&
+        !q.options?.length
       ) {
         return { success: false, error: `第 ${i + 1} 题缺少 options 字段` };
       }
-      if (
-        typeof q.score !== "number" ||
-        Number.isNaN(q.score) ||
-        q.score <= 0
-      ) {
+      if (typeof q.score !== 'number' || Number.isNaN(q.score) || q.score <= 0) {
         return {
           success: false,
           error: `第 ${i + 1} 题 score 必须是大于 0 的数字`,
@@ -72,7 +67,7 @@ export function parseAndValidateQuestions(questionsStr: unknown) {
   } catch (error) {
     return {
       success: false,
-      error: `解析失败：${error instanceof Error ? error.message : "未知错误"}`,
+      error: `解析失败：${error instanceof Error ? error.message : '未知错误'}`,
     };
   }
 }
@@ -99,7 +94,7 @@ function generateQuestionId(index: number) {
 }
 
 function toQuestionType(type: string | number) {
-  if (typeof type === "number") {
+  if (typeof type === 'number') {
     if (
       type === QuestionTypeEnum.SingleChoice ||
       type === QuestionTypeEnum.MultipleChoice ||
@@ -114,15 +109,15 @@ function toQuestionType(type: string | number) {
 
   // 尝试中文 label 映射
   switch (type.trim()) {
-    case "单选题":
+    case '单选题':
       return QuestionTypeEnum.SingleChoice;
-    case "多选题":
+    case '多选题':
       return QuestionTypeEnum.MultipleChoice;
-    case "判断题":
+    case '判断题':
       return QuestionTypeEnum.TrueFalse;
-    case "填空题":
+    case '填空题':
       return QuestionTypeEnum.FillBlank;
-    case "简答题":
+    case '简答题':
       return QuestionTypeEnum.ShortAnswer;
     default:
       return QuestionTypeEnum.SingleChoice;
@@ -158,20 +153,17 @@ export async function loadQuestionBanks(roleId: string) {
  * @param targetScore 目标总分
  * @returns 生成的试卷数据
  */
-export function generatePaper(
-  bank: QuestionByType,
-  ratios: RatioMap,
-  targetScore: number
-) {
+export function generatePaper(bank: QuestionByType, ratios: RatioMap, targetScore: number) {
   if (!bank) {
     return { list: [], totalScore: 0 };
   }
 
   // 初始化可用题目池
   const available = Object.fromEntries(
-    (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(
-      ([type, list]) => [type, [...list]]
-    )
+    (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(([type, list]) => [
+      type,
+      [...list],
+    ]),
   ) as Record<QuestionType, QuestionInfo[]>;
 
   const result: QuestionInfo[] = [];
@@ -180,10 +172,7 @@ export function generatePaper(
   while (total < targetScore) {
     // 获取当前有权重且有题目的题型
     const availableTypes = Object.entries(ratios)
-      .filter(
-        ([type, weight]) =>
-          weight > 0 && available[+type as QuestionType]?.length > 0
-      )
+      .filter(([type, weight]) => weight > 0 && available[+type as QuestionType]?.length > 0)
       .map(([type]) => +type as QuestionType);
 
     if (availableTypes.length === 0) {
@@ -193,9 +182,7 @@ export function generatePaper(
 
     // 使用加权随机选择器从可用题型中选择
     const picker = buildWeightedPicker(
-      Object.fromEntries(
-        availableTypes.map((type) => [type, ratios[type] || 0])
-      ) as RatioMap
+      Object.fromEntries(availableTypes.map((type) => [type, ratios[type] ?? 0])) as RatioMap,
     );
 
     const type = picker();
@@ -250,5 +237,4 @@ function buildWeightedPicker(ratios: RatioMap) {
   };
 }
 
-const randomPick = <T,>(items: T[]): T =>
-  items[Math.floor(Math.random() * items.length)];
+const randomPick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];

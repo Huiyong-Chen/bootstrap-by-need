@@ -1,75 +1,53 @@
-import "@/styles/index.css";
-import "./import-questions.css";
+import '@/styles/index.css';
+import './import-questions.css';
 
-import {
-  groupQuestionsByType,
-  parseAndValidateQuestions,
-} from "@/api/questions.mts";
-import { addRole, getAllRoles } from "@/api/roles.mts";
-import { Modal } from "@/components/modal/modal.mts";
-import {
-  addRoleToSelector,
-  renderRoleSelector,
-} from "@/components/roleSelector/roleSelector.mts";
-import { eventListener } from "@/events/index.mts";
-import { saveQuestionBankByRole } from "@/indexed-db/index.mts";
-import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
-import { toggleClass } from "@/utils/domHelpers.mts";
+import { groupQuestionsByType, parseAndValidateQuestions } from '@/api/questions.mts';
+import { addRole, getAllRoles } from '@/api/roles.mts';
+import { Modal } from '@/components/modal/modal.mts';
+import { addRoleToSelector, renderRoleSelector } from '@/components/roleSelector/roleSelector.mts';
+import { eventListener } from '@/events/index.mts';
+import { saveQuestionBankByRole } from '@/indexed-db/index.mts';
+import { RoleInfo, RoleInfoRecord } from '@/types/index.types.mts';
+import { toggleClass } from '@/utils/domHelpers.mts';
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener('DOMContentLoaded', () => {
   // #region =============== DOMS ===============
   const DOMS = {
     // 返回按钮
-    backBtn: document.getElementById("backBtn") as HTMLButtonElement,
+    backBtn: document.getElementById('backBtn') as HTMLButtonElement,
     // 人员选择器容器
-    existingRolesCtn: document.getElementById(
-      "existingRolesCtn"
-    ) as HTMLDivElement,
+    existingRolesCtn: document.getElementById('existingRolesCtn') as HTMLDivElement,
     // 人员选择器
-    roleSelect: document.getElementById("roleSelect") as HTMLSelectElement,
+    roleSelect: document.getElementById('roleSelect') as HTMLSelectElement,
     // 新建人员Label
-    createNewRoleLabel: document.getElementById(
-      "createNewRoleLabel"
-    ) as HTMLElement,
+    createNewRoleLabel: document.getElementById('createNewRoleLabel') as HTMLElement,
     // 新建人员表单
-    createRoleForm: document.getElementById(
-      "createRoleForm"
-    ) as HTMLFormElement,
+    createRoleForm: document.getElementById('createRoleForm') as HTMLFormElement,
     // 新建人员表单提交按钮
     createRoleFormSubmitBtn: document.getElementById(
-      "createRoleFormSubmitBtn"
+      'createRoleFormSubmitBtn',
     ) as HTMLButtonElement,
     // 导入题库-选择岗位提示
-    importPlaceholder: document.getElementById(
-      "importPlaceholder"
-    ) as HTMLDivElement,
+    importPlaceholder: document.getElementById('importPlaceholder') as HTMLDivElement,
     // 导入题库容器
-    importerSection: document.getElementById(
-      "importerSection"
-    ) as HTMLDivElement,
+    importerSection: document.getElementById('importerSection') as HTMLDivElement,
     // 手动导入按钮
-    manualBtn: document.getElementById("manualBtn") as HTMLButtonElement,
+    manualBtn: document.getElementById('manualBtn') as HTMLButtonElement,
     // 文件导入按钮
-    importBtn: document.getElementById("importBtn") as HTMLButtonElement,
+    importBtn: document.getElementById('importBtn') as HTMLButtonElement,
     // 手动输入表单
-    manualForm: document.getElementById("manualForm") as HTMLFormElement,
+    manualForm: document.getElementById('manualForm') as HTMLFormElement,
     // 手动输入表单提交按钮
-    manualSubmitBtn: document.getElementById(
-      "manualSubmitBtn"
-    ) as HTMLButtonElement,
+    manualSubmitBtn: document.getElementById('manualSubmitBtn') as HTMLButtonElement,
     // 文件导入表单
-    importForm: document.getElementById("importForm") as HTMLFormElement,
+    importForm: document.getElementById('importForm') as HTMLFormElement,
     // 文件导入input
-    importFileInput: document.getElementById(
-      "importFileInput"
-    ) as HTMLInputElement,
+    importFileInput: document.getElementById('importFileInput') as HTMLInputElement,
     // 导入模式选项
     manualImportMode: document.getElementsByName(
-      "manualImportMode"
+      'manualImportMode',
     ) as NodeListOf<HTMLInputElement>,
-    fileImportMode: document.getElementsByName(
-      "fileImportMode"
-    ) as NodeListOf<HTMLInputElement>,
+    fileImportMode: document.getElementsByName('fileImportMode') as NodeListOf<HTMLInputElement>,
   };
   // #endregion =============== DOMS ===============
 
@@ -91,7 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // #region =============== 角色选择器 ===============
 
   // 监听角色添加事件，动态更新选择器选项
-  eventListener.on("role:add", appendSelectorOption);
+  eventListener.on('role:add', appendSelectorOption);
 
   // 角色选择变更事件绑定
   DOMS.roleSelect.onchange = roleSelectChange;
@@ -102,11 +80,11 @@ window.addEventListener("DOMContentLoaded", () => {
    */
   function roleSelectChange() {
     if (DOMS.roleSelect.value) {
-      toggleClass(DOMS.importPlaceholder, "hidden", false);
-      toggleClass(DOMS.importerSection, "hidden", true);
+      toggleClass(DOMS.importPlaceholder, 'hidden', false);
+      toggleClass(DOMS.importerSection, 'hidden', true);
     } else {
-      toggleClass(DOMS.importPlaceholder, "hidden", true);
-      toggleClass(DOMS.importerSection, "hidden", false);
+      toggleClass(DOMS.importPlaceholder, 'hidden', true);
+      toggleClass(DOMS.importerSection, 'hidden', false);
     }
   }
 
@@ -125,8 +103,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // import-questions页面的特殊逻辑
     if (roles.length > 0) {
-      DOMS.createNewRoleLabel.innerText = "或创建新岗位：";
-      toggleClass(DOMS.existingRolesCtn, "hidden", true);
+      DOMS.createNewRoleLabel.innerText = '或创建新岗位：';
+      toggleClass(DOMS.existingRolesCtn, 'hidden', true);
     }
   }
 
@@ -136,7 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
    * @param role 新添加的角色信息
    */
   function appendSelectorOption(role: RoleInfoRecord) {
-    if (DOMS.existingRolesCtn.classList.contains("hidden")) {
+    if (DOMS.existingRolesCtn.classList.contains('hidden')) {
       // 如果之前没有角色，这是第一个角色，需要重新渲染整个选择器
       rolesSelectorRender([role]);
     } else {
@@ -169,8 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
    * 根据表单有效性启用或禁用提交按钮
    */
   DOMS.createRoleForm.oninput = () => {
-    DOMS.createRoleFormSubmitBtn.disabled =
-      !DOMS.createRoleForm.checkValidity();
+    DOMS.createRoleFormSubmitBtn.disabled = !DOMS.createRoleForm.checkValidity();
   };
   // #endregion =============== 角色创建表单 ===============
 
@@ -181,11 +158,11 @@ window.addEventListener("DOMContentLoaded", () => {
    * 激活手动导入模式，显示手动输入表单
    */
   DOMS.manualBtn.onclick = () => {
-    toggleClass(DOMS.manualBtn, "active", false);
-    toggleClass(DOMS.manualForm, "hidden", true);
+    toggleClass(DOMS.manualBtn, 'active', false);
+    toggleClass(DOMS.manualForm, 'hidden', true);
 
-    toggleClass(DOMS.importBtn, "active", true);
-    toggleClass(DOMS.importForm, "hidden", false);
+    toggleClass(DOMS.importBtn, 'active', true);
+    toggleClass(DOMS.importForm, 'hidden', false);
   };
 
   /**
@@ -193,11 +170,11 @@ window.addEventListener("DOMContentLoaded", () => {
    * 激活文件导入模式，显示文件选择表单
    */
   DOMS.importBtn.onclick = () => {
-    toggleClass(DOMS.importBtn, "active", false);
-    toggleClass(DOMS.importForm, "hidden", true);
+    toggleClass(DOMS.importBtn, 'active', false);
+    toggleClass(DOMS.importForm, 'hidden', true);
 
-    toggleClass(DOMS.manualBtn, "active", true);
-    toggleClass(DOMS.manualForm, "hidden", false);
+    toggleClass(DOMS.manualBtn, 'active', true);
+    toggleClass(DOMS.manualForm, 'hidden', false);
   };
 
   /**
@@ -208,7 +185,7 @@ window.addEventListener("DOMContentLoaded", () => {
     e.preventDefault(); // 阻止默认提交
 
     if (!DOMS.roleSelect.value) {
-      await Modal.alert("请先选择岗位", "操作提示");
+      await Modal.alert('请先选择岗位', '操作提示');
       return;
     }
 
@@ -217,7 +194,7 @@ window.addEventListener("DOMContentLoaded", () => {
       questions: string;
     };
     if (!questionsStr.trim()) {
-      await Modal.alert("请输入题目数据", "输入错误");
+      await Modal.alert('请输入题目数据', '输入错误');
       return;
     }
     DOMS.manualSubmitBtn.disabled = true;
@@ -225,29 +202,26 @@ window.addEventListener("DOMContentLoaded", () => {
       // 检查并转换数据
       const result = parseAndValidateQuestions(questionsStr);
       if (!result.success || !result.questions) {
-        throw new Error(result.error || "导入失败");
+        throw new Error(result.error ?? '导入失败');
       }
       // 按题型分组
       const grouped = groupQuestionsByType(result.questions);
 
       // 获取导入模式
-      const append = getImportMode("manualImportMode");
+      const append = getImportMode('manualImportMode');
       await saveQuestionBankByRole(DOMS.roleSelect.value, grouped, append);
 
       DOMS.manualForm.reset();
 
       const isConfirmed = await Modal.confirm(
         `成功导入 ${result.questions.length} 道题目，是否前往导出试卷？`,
-        "导入成功"
+        '导入成功',
       );
       if (isConfirmed) {
         DOMS.backBtn.click();
       }
     } catch (error) {
-      await Modal.alert(
-        error instanceof Error ? error.message : "导入失败",
-        "导入错误"
-      );
+      await Modal.alert(error instanceof Error ? error.message : '导入失败', '导入错误');
     } finally {
       DOMS.manualSubmitBtn.disabled = false;
     }
@@ -267,7 +241,7 @@ window.addEventListener("DOMContentLoaded", () => {
    */
   DOMS.importFileInput.onchange = async (e) => {
     if (!DOMS.roleSelect.value) {
-      await Modal.alert("请先选择岗位", "操作提示");
+      await Modal.alert('请先选择岗位', '操作提示');
       return;
     }
 
@@ -283,7 +257,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const result = parseAndValidateQuestions(text);
 
       if (!result.success || !result.questions) {
-        await Modal.alert(result.error || "导入失败", "导入错误");
+        await Modal.alert(result.error ?? '导入失败', '导入错误');
 
         DOMS.importFileInput.disabled = false;
         return;
@@ -293,21 +267,21 @@ window.addEventListener("DOMContentLoaded", () => {
       const grouped = groupQuestionsByType(result.questions);
 
       // 获取导入模式并保存到 IndexedDB
-      const append = getImportMode("fileImportMode");
+      const append = getImportMode('fileImportMode');
       await saveQuestionBankByRole(DOMS.roleSelect.value, grouped, append);
 
       const isConfirmed = await Modal.confirm(
         `成功导入 ${result.questions.length} 道题目，是否前往导出试卷？`,
-        "导入成功"
+        '导入成功',
       );
       if (isConfirmed) {
         DOMS.backBtn.click();
       }
 
       // 清除文件输入
-      DOMS.importFileInput.value = "";
+      DOMS.importFileInput.value = '';
     } catch (error) {
-      alert(`导入失败：${error instanceof Error ? error.message : "未知错误"}`);
+      alert(`导入失败：${error instanceof Error ? error.message : '未知错误'}`);
     } finally {
       DOMS.importFileInput.disabled = false;
     }
@@ -322,13 +296,11 @@ window.addEventListener("DOMContentLoaded", () => {
    * @param modeName 单选框组的name属性 ('manualImportMode' | 'fileImportMode')
    * @returns 是否为追加模式
    */
-  function getImportMode(
-    modeName: "manualImportMode" | "fileImportMode"
-  ): boolean {
+  function getImportMode(modeName: 'manualImportMode' | 'fileImportMode'): boolean {
     const radios = DOMS[modeName];
     for (const radio of radios) {
       if (radio.checked) {
-        return radio.value === "append";
+        return radio.value === 'append';
       }
     }
     return false; // 默认覆盖模式

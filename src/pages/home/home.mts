@@ -1,17 +1,10 @@
-import "@/styles/index.css";
-import "./home.css";
+import '@/styles/index.css';
+import './home.css';
 
-import {
-  GeneratedPaper,
-  generatePaper,
-  loadQuestionBanks,
-} from "@/api/questions.mts";
-import { getAllRoles } from "@/api/roles.mts";
-import { Modal } from "@/components/modal/modal.mts";
-import {
-  renderRoleSelector,
-  updateRoleBadge,
-} from "@/components/roleSelector/roleSelector.mts";
+import { GeneratedPaper, generatePaper, loadQuestionBanks } from '@/api/questions.mts';
+import { getAllRoles } from '@/api/roles.mts';
+import { Modal } from '@/components/modal/modal.mts';
+import { renderRoleSelector, updateRoleBadge } from '@/components/roleSelector/roleSelector.mts';
 import {
   QuestionByType,
   QuestionInfo,
@@ -19,38 +12,30 @@ import {
   QuestionTypeChineseName,
   QuestionTypeOrder,
   RoleInfoRecord,
-} from "@/types/index.types.mts";
-import { buildDoc, downloadDoc } from "@/utils/docExporter.mts";
-import { toggleClass } from "@/utils/domHelpers.mts";
+} from '@/types/index.types.mts';
+import { buildDoc, downloadDoc } from '@/utils/docExporter.mts';
+import { toggleClass } from '@/utils/domHelpers.mts';
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener('DOMContentLoaded', () => {
   // #region =============== DOMS ===============
   const DOMS = {
-    roleSelector: document.getElementById("roleSelector") as HTMLDivElement,
-    roleSelect: document.getElementById("roleSelect") as HTMLSelectElement,
-    roleBadge: document.getElementById("roleBadge") as HTMLDivElement,
-    emptyRole: document.getElementById("emptyRole") as HTMLDivElement,
-    weightConfig: document.getElementById("weightConfig") as HTMLDivElement,
-    targetScore: document.getElementById("targetScore") as HTMLInputElement,
-    ratioList: document.getElementById("ratioList") as HTMLFormElement,
-    totalRatio: document.getElementById("totalRatio") as HTMLDivElement,
-    randomBtn: document.getElementById("randomBtn") as HTMLButtonElement,
-    randomResultMessage: document.getElementById(
-      "randomResultMessage"
-    ) as HTMLDivElement,
-    generatePager: document.getElementById("generatePager") as HTMLDivElement,
-    questionCount: document.getElementById("questionCount") as HTMLSpanElement,
-    totalScore: document.getElementById("totalScore") as HTMLSpanElement,
-    remainingScoreCtn: document.getElementById(
-      "remainingScoreCtn"
-    ) as HTMLDivElement,
-    remainingScore: document.getElementById(
-      "remainingScore"
-    ) as HTMLSpanElement,
-    questionList: document.getElementById("questionList") as HTMLDivElement,
-    exportQuestionsPager: document.getElementById(
-      "exportQuestionsPager"
-    ) as HTMLButtonElement,
+    roleSelector: document.getElementById('roleSelector') as HTMLDivElement,
+    roleSelect: document.getElementById('roleSelect') as HTMLSelectElement,
+    roleBadge: document.getElementById('roleBadge') as HTMLDivElement,
+    emptyRole: document.getElementById('emptyRole') as HTMLDivElement,
+    weightConfig: document.getElementById('weightConfig') as HTMLDivElement,
+    targetScore: document.getElementById('targetScore') as HTMLInputElement,
+    ratioList: document.getElementById('ratioList') as HTMLFormElement,
+    totalRatio: document.getElementById('totalRatio') as HTMLDivElement,
+    randomBtn: document.getElementById('randomBtn') as HTMLButtonElement,
+    randomResultMessage: document.getElementById('randomResultMessage') as HTMLDivElement,
+    generatePager: document.getElementById('generatePager') as HTMLDivElement,
+    questionCount: document.getElementById('questionCount') as HTMLSpanElement,
+    totalScore: document.getElementById('totalScore') as HTMLSpanElement,
+    remainingScoreCtn: document.getElementById('remainingScoreCtn') as HTMLDivElement,
+    remainingScore: document.getElementById('remainingScore') as HTMLSpanElement,
+    questionList: document.getElementById('questionList') as HTMLDivElement,
+    exportQuestionsPager: document.getElementById('exportQuestionsPager') as HTMLButtonElement,
   };
   // #endregion =============== DOMS ===============
 
@@ -66,16 +51,14 @@ window.addEventListener("DOMContentLoaded", () => {
   async function roleSelectChange() {
     const selectedRoleId = DOMS.roleSelect.value;
     if (selectedRoleId) {
-      const selectedRole = (await getAllRoles()).find(
-        (i) => i.id === selectedRoleId
-      )!;
+      const selectedRole = (await getAllRoles()).find((i) => i.id === selectedRoleId)!;
       setRoleBadgeText(selectedRole.name);
-      toggleClass(DOMS.weightConfig, "hidden", true);
+      toggleClass(DOMS.weightConfig, 'hidden', true);
       // 根据所选岗位，匹配题目
       renderQuestionsRatioAndPreviewExport(selectedRoleId);
     } else {
-      setRoleBadgeText("");
-      toggleClass(DOMS.weightConfig, "hidden", false);
+      setRoleBadgeText('');
+      toggleClass(DOMS.weightConfig, 'hidden', false);
     }
   }
 
@@ -91,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const selectedRole = roles.find((r) => r.id === roleId);
         if (selectedRole) {
           setRoleBadgeText(selectedRole.name);
-          toggleClass(DOMS.weightConfig, "hidden", true);
+          toggleClass(DOMS.weightConfig, 'hidden', true);
           renderQuestionsRatioAndPreviewExport(roleId);
         }
       },
@@ -117,8 +100,7 @@ window.addEventListener("DOMContentLoaded", () => {
    */
   DOMS.ratioList.onchange = () => {
     DOMS.randomBtn.disabled =
-      !DOMS.ratioList.checkValidity() ||
-      !Object.values(questionRatioList).some((i) => i > 0);
+      !DOMS.ratioList.checkValidity() || !Object.values(questionRatioList).some((i) => i > 0);
   };
 
   /** 当前选中的角色题库数据，按题型分组 */
@@ -154,30 +136,28 @@ window.addEventListener("DOMContentLoaded", () => {
     questionTypes.forEach((type) => {
       const questionType = +type as QuestionType;
 
-      const typeItemEle = document.createElement("div");
-      typeItemEle.classList.add("ratio-item");
+      const typeItemEle = document.createElement('div');
+      typeItemEle.classList.add('ratio-item');
 
-      const typeItemInfoEle = document.createElement("div");
-      typeItemInfoEle.classList.add("ratio-item-info");
+      const typeItemInfoEle = document.createElement('div');
+      typeItemInfoEle.classList.add('ratio-item-info');
 
-      const typeLabelEle = document.createElement("strong");
+      const typeLabelEle = document.createElement('strong');
       typeLabelEle.innerText = QuestionTypeChineseName[questionType];
 
-      const totalQuestionLabel = document.createElement("span");
-      totalQuestionLabel.innerText = `共 ${
-        questionBanks![questionType].length
-      } 题`;
+      const totalQuestionLabel = document.createElement('span');
+      totalQuestionLabel.innerText = `共 ${questionBanks![questionType].length} 题`;
 
-      const typeRatioEle = document.createElement("input") as HTMLInputElement;
+      const typeRatioEle = document.createElement('input') as HTMLInputElement;
 
-      typeRatioEle.classList.add("ratio-input");
-      typeRatioEle.classList.add("input");
+      typeRatioEle.classList.add('ratio-input');
+      typeRatioEle.classList.add('input');
       typeRatioEle.name = `questionType${questionType}`;
-      typeRatioEle.type = "number";
-      typeRatioEle.placeholder = "输入权重";
-      typeRatioEle.min = "0";
-      typeRatioEle.step = "1";
-      typeRatioEle.value = "0";
+      typeRatioEle.type = 'number';
+      typeRatioEle.placeholder = '输入权重';
+      typeRatioEle.min = '0';
+      typeRatioEle.step = '1';
+      typeRatioEle.value = '0';
       typeRatioEle.onchange = (e) => {
         questionRatioChange((e.target as HTMLInputElement).value, questionType);
       };
@@ -201,9 +181,10 @@ window.addEventListener("DOMContentLoaded", () => {
   function questionRatioChange(value: string | number, type: QuestionType) {
     questionRatioList[type] = +value;
 
-    DOMS.totalRatio.innerText = `总权重：${Object.values(
-      questionRatioList
-    ).reduce((t, c) => t + c, 0)}`;
+    DOMS.totalRatio.innerText = `总权重：${Object.values(questionRatioList).reduce(
+      (t, c) => t + c,
+      0,
+    )}`;
   }
 
   // #endregion =============== 权重配置 ===============
@@ -222,15 +203,11 @@ window.addEventListener("DOMContentLoaded", () => {
    */
   async function generateQuestions() {
     if (+DOMS.targetScore.value <= 0) {
-      await Modal.alert("请输入需要生成的总分数", "输入错误");
+      await Modal.alert('请输入需要生成的总分数', '输入错误');
       return;
     }
 
-    generatedPaper = generatePaper(
-      questionBanks!,
-      questionRatioList,
-      +DOMS.targetScore.value
-    );
+    generatedPaper = generatePaper(questionBanks!, questionRatioList, +DOMS.targetScore.value);
 
     const typePriority = (type: QuestionType) => {
       const idx = QuestionTypeOrder.indexOf(type);
@@ -244,19 +221,15 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     if (sortedList.length === 0) {
-      await Modal.alert("题库不足，未能生成试卷", "生成失败");
+      await Modal.alert('题库不足，未能生成试卷', '生成失败');
       return;
     }
     if (generatedPaper.shortfall) {
       DOMS.randomResultMessage.innerText = `试题抽完，距离目标还差 ${generatedPaper.shortfall} 分`;
-      toggleClass(DOMS.randomResultMessage, "hidden", true);
+      toggleClass(DOMS.randomResultMessage, 'hidden', true);
     }
-    renderQuestionPage(
-      sortedList,
-      generatedPaper.totalScore,
-      generatedPaper.shortfall
-    );
-    await Modal.alert("已生成试卷", "生成成功");
+    renderQuestionPage(sortedList, generatedPaper.totalScore, generatedPaper.shortfall);
+    await Modal.alert('已生成试卷', '生成成功');
   }
 
   /**
@@ -269,40 +242,40 @@ window.addEventListener("DOMContentLoaded", () => {
   function renderQuestionPage(
     questions: QuestionInfo[],
     totalScore: number,
-    remainingScore?: number
+    remainingScore?: number,
   ) {
     DOMS.questionCount.innerText = `${questions.length}`;
     DOMS.totalScore.innerText = `${totalScore}`;
     DOMS.remainingScore.innerText = `${remainingScore ?? 0}`;
-    toggleClass(DOMS.remainingScoreCtn, "hidden", !!remainingScore);
+    toggleClass(DOMS.remainingScoreCtn, 'hidden', !!remainingScore);
 
     const fragment = document.createDocumentFragment();
     // 题目渲染
     questions.forEach((q, index) => {
-      const cardEle = document.createElement("div");
-      cardEle.classList.add("question-card");
+      const cardEle = document.createElement('div');
+      cardEle.classList.add('question-card');
 
-      const titleEle = document.createElement("div");
-      titleEle.classList.add("question-title");
+      const titleEle = document.createElement('div');
+      titleEle.classList.add('question-title');
       titleEle.innerText = `${index + 1}. [${
         QuestionTypeChineseName[q.type]
       }] ${q.title} (${q.score}分)`;
 
       cardEle.appendChild(titleEle);
       if (q.options) {
-        const optionsUlEle = document.createElement("ul");
-        optionsUlEle.classList.add("options-list");
+        const optionsUlEle = document.createElement('ul');
+        optionsUlEle.classList.add('options-list');
 
         q.options.forEach((opt, optIndex) => {
-          const optionLiEle = document.createElement("li");
-          optionLiEle.classList.add("option-item");
+          const optionLiEle = document.createElement('li');
+          optionLiEle.classList.add('option-item');
 
-          const optionBadgeEle = document.createElement("span");
-          optionBadgeEle.classList.add("option-badge");
+          const optionBadgeEle = document.createElement('span');
+          optionBadgeEle.classList.add('option-badge');
           optionBadgeEle.innerText = String.fromCharCode(65 + optIndex);
 
-          const optionTextEle = document.createElement("span");
-          optionTextEle.classList.add("option-text");
+          const optionTextEle = document.createElement('span');
+          optionTextEle.classList.add('option-text');
           optionTextEle.innerText = opt;
 
           optionLiEle.appendChild(optionBadgeEle);
@@ -313,15 +286,15 @@ window.addEventListener("DOMContentLoaded", () => {
         cardEle.appendChild(optionsUlEle);
       }
 
-      const metaEle = document.createElement("div");
-      metaEle.classList.add("question-meta");
+      const metaEle = document.createElement('div');
+      metaEle.classList.add('question-meta');
 
-      const difficultyEle = document.createElement("span");
-      difficultyEle.classList.add("meta-item");
+      const difficultyEle = document.createElement('span');
+      difficultyEle.classList.add('meta-item');
       difficultyEle.innerText = `难度：${q.difficulty ?? 1}`;
 
-      const answerEle = document.createElement("span");
-      answerEle.classList.add("meta-item", "answer");
+      const answerEle = document.createElement('span');
+      answerEle.classList.add('meta-item', 'answer');
       answerEle.innerText = `答案：${q.answer}`;
 
       metaEle.appendChild(difficultyEle);
@@ -333,7 +306,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     DOMS.questionList.appendChild(fragment);
 
-    toggleClass(DOMS.generatePager, "hidden", true);
+    toggleClass(DOMS.generatePager, 'hidden', true);
   }
 
   // #endregion =============== 试卷生成 ===============
@@ -352,18 +325,13 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const label = (await getAllRoles()).find(
-      (i) => i.id === DOMS.roleSelect.value
-    )!.name;
-    const timestamp = new Date()
-      .toISOString()
-      .replace(/[-:]/g, "")
-      .slice(0, 15);
+    const label = (await getAllRoles()).find((i) => i.id === DOMS.roleSelect.value)!.name;
+    const timestamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15);
 
     const examDoc = buildDoc(
       `${label} 随机试卷（总分 ${generatedPaper.totalScore}）`,
       generatedPaper.list,
-      false
+      false,
     );
     const answerDoc = buildDoc(`${label} 参考答案`, generatedPaper.list, true);
 

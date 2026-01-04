@@ -1,4 +1,4 @@
-import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
+import { RoleInfo, RoleInfoRecord } from '@/types/index.types.mts';
 import {
   ROLES_STORE,
   createTransaction,
@@ -6,7 +6,7 @@ import {
   initDB,
   performDatabaseUpgrade,
   promisifyRequest,
-} from "./base.mts";
+} from './base.mts';
 
 // #region ============= 角色管理 =============
 
@@ -17,7 +17,7 @@ import {
 export async function queryAllRoles(): Promise<RoleInfoRecord[]> {
   const db = await initDB();
   try {
-    const { stores } = createTransaction(db, [ROLES_STORE], "readonly");
+    const { stores } = createTransaction(db, [ROLES_STORE], 'readonly');
     const request = (stores as IDBObjectStore).getAll();
     const result = await promisifyRequest(request);
     return result || [];
@@ -31,9 +31,7 @@ export async function queryAllRoles(): Promise<RoleInfoRecord[]> {
  * @param role 角色信息
  * @returns 保存的角色信息
  */
-export async function saveRoleInfo(
-  role: RoleInfo | RoleInfoRecord
-): Promise<RoleInfoRecord> {
+export async function saveRoleInfo(role: RoleInfo | RoleInfoRecord): Promise<RoleInfoRecord> {
   let db = await initDB();
 
   // 检查 objectStore 是否存在，如果不存在需要升级数据库
@@ -46,7 +44,7 @@ export async function saveRoleInfo(
       existingRoles = await queryAllRoles();
     } catch (error) {
       // 如果获取失败，继续执行
-      console.warn("获取现有角色列表失败:", error);
+      console.warn('获取现有角色列表失败:', error);
     }
 
     // 执行数据库升级
@@ -58,16 +56,16 @@ export async function saveRoleInfo(
     // 再次检查，确保 objectStore 已创建
     if (!ensureRoleStoreExists(db, role.id)) {
       db.close();
-      throw new Error("创建角色存储表失败，请重试");
+      throw new Error('创建角色存储表失败，请重试');
     }
   }
 
   try {
-    const { stores } = createTransaction(db, [ROLES_STORE], "readwrite");
+    const { stores } = createTransaction(db, [ROLES_STORE], 'readwrite');
 
     const roleInfo: RoleInfoRecord = {
       ...role,
-      createdAt: "createdAt" in role ? role.createdAt : Date.now(),
+      createdAt: 'createdAt' in role ? role.createdAt : Date.now(),
       updatedAt: Date.now(),
     };
 
@@ -88,14 +86,12 @@ export async function saveRoleInfo(
 export async function getRoleInfo(roleId: string): Promise<RoleInfo | null> {
   const db = await initDB();
   try {
-    const { stores } = createTransaction(db, [ROLES_STORE], "readonly");
+    const { stores } = createTransaction(db, [ROLES_STORE], 'readonly');
     const request = (stores as IDBObjectStore).get(roleId);
     const result = await promisifyRequest(request);
-    return result || null;
+    return result ?? null;
   } catch (error) {
-    throw new Error(
-      `读取角色信息失败: ${error instanceof Error ? error.message : "未知错误"}`
-    );
+    throw new Error(`读取角色信息失败: ${error instanceof Error ? error.message : '未知错误'}`);
   } finally {
     db.close();
   }

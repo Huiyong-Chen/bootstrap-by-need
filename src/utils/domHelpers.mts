@@ -45,7 +45,7 @@ export function createOptionElement(value: string, text: string): HTMLOptionElem
  */
 export function createFragmentWithElements(elements: HTMLElement[]): DocumentFragment {
   const fragment = document.createDocumentFragment();
-  elements.forEach(element => fragment.appendChild(element));
+  elements.forEach((element) => fragment.appendChild(element));
   return fragment;
 }
 
@@ -55,7 +55,11 @@ export function createFragmentWithElements(elements: HTMLElement[]): DocumentFra
  * @param className 类名
  * @param remove 是否移除类（true=移除，false=添加）
  */
-export function toggleClass(element: HTMLElement, className: string, remove: boolean = false): void {
+export function toggleClass(
+  element: HTMLElement,
+  className: string,
+  remove: boolean = false,
+): void {
   if (remove) {
     element.classList.remove(className);
   } else {

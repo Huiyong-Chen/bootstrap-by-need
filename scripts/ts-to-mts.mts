@@ -12,12 +12,11 @@ import {
   existsSync,
   readdirSync,
   readFileSync,
-  realpath,
   renameSync,
   statSync,
 } from "fs";
-import { basename, join, relative, resolve } from "path";
 import { minimatch } from "minimatch";
+import { basename, join, relative, resolve } from "path";
 
 // 类型定义
 interface Config {

@@ -224,7 +224,7 @@
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 0.9rem;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   resize: vertical;
   min-height: 200px;
   transition: all 0.2s;
@@ -267,7 +267,6 @@
   gap: 1rem;
 }
 
-
 .file-input-label {
   display: inline-block;
   padding: 1rem 2rem;
@@ -292,7 +291,6 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
-
 
 .file-input {
   display: none;
@@ -320,7 +318,7 @@
   color: #333;
 }
 
-.option-label input[type="radio"] {
+.option-label input[type='radio'] {
   margin: 0;
 }
 

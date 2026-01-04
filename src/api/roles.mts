@@ -1,6 +1,6 @@
-import { eventListener } from "@/events/index.mts";
-import { queryAllRoles, saveRoleInfo } from "@/indexed-db/index.mts";
-import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
+import { eventListener } from '@/events/index.mts';
+import { queryAllRoles, saveRoleInfo } from '@/indexed-db/index.mts';
+import { RoleInfo, RoleInfoRecord } from '@/types/index.types.mts';
 
 let _roles: RoleInfoRecord[] = [];
 
@@ -20,8 +20,8 @@ export async function addRole(role: RoleInfo) {
   try {
     const result = await saveRoleInfo(role);
     _roles.push(result);
-    eventListener.emit("role:add", result);
+    eventListener.emit('role:add', result);
   } catch (error) {
-    console.error("Failed to add role:", error);
+    console.error('Failed to add role:', error);
   }
 }

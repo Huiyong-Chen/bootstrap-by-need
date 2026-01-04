@@ -19,8 +19,8 @@ An architect builds the inner OS of a project
 它记录的不是“我最终用了什么技术”，  
 而是：
 
-- 我在什么时候开始感到不舒服  
-- 是什么问题逼迫我做出一个工程决策  
+- 我在什么时候开始感到不舒服
+- 是什么问题逼迫我做出一个工程决策
 - 我为什么在这一刻引入某种能力，而不是更早、也不是更晚
 
 这里的每一个工具、每一份配置、每一段代码，  
@@ -67,6 +67,7 @@ An architect builds the inner OS of a project
 2. 对照 `docs/` 中的说明：
    - **`docs/innerOS/`**：架构师的主观思考（当时在纠结什么）
    - **`docs/decisions/`**：客观的架构决策记录（最终决定了什么）
+   - **`ENGINEERING-MILESTONES.md`**：完整的工程化里程碑总览
 3. 不要跳过“看起来很原始”的阶段
 
 因为真正重要的，  

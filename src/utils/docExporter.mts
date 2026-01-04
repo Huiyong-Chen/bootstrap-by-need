@@ -1,31 +1,13 @@
-// @ts-ignore
-import {
-  AlignmentType,
-  Document,
-  HeadingLevel,
-  Packer,
-  Paragraph,
-  TextRun,
-} from "docx";
-import {
-  QuestionInfo,
-  QuestionTypeChineseName,
-  QuestionTypeEnum,
-} from "@/types/index.types.mts";
+import { QuestionInfo, QuestionTypeChineseName, QuestionTypeEnum } from '@/types/index.types.mts';
+import { AlignmentType, Document, HeadingLevel, Packer, Paragraph, TextRun } from 'docx';
 
 const questionTitle = (q: QuestionInfo, index: number) =>
-  `${index + 1}. [${QuestionTypeChineseName[q.type]}] ${q.title} (${
-    q.score
-  }分)`;
+  `${index + 1}. [${QuestionTypeChineseName[q.type]}] ${q.title} (${q.score}分)`;
 
 const createBlankLines = (count: number) =>
-  Array.from({ length: count }, () => new Paragraph({ text: "" }));
+  Array.from({ length: count }, () => new Paragraph({ text: '' }));
 
-export function buildDoc(
-  title: string,
-  questions: QuestionInfo[],
-  withAnswer: boolean
-) {
+export function buildDoc(title: string, questions: QuestionInfo[], withAnswer: boolean) {
   return new Document({
     sections: [
       {
@@ -36,7 +18,7 @@ export function buildDoc(
             alignment: AlignmentType.LEFT,
           }),
           ...questions.flatMap((q, idx) => {
-            const isRandomPaper = title.includes("随机试卷");
+            const isRandomPaper = title.includes('随机试卷');
 
             const questionParts = [
               new Paragraph({
@@ -52,27 +34,25 @@ export function buildDoc(
             if (q.options?.length) {
               const correctAnswers = new Set(
                 q.answer
-                  .split(",")
+                  .split(',')
                   .map((a) => a.trim())
-                  .filter(Boolean)
+                  .filter(Boolean),
               );
 
               questionParts.push(
                 ...q.options.map((opt, optIdx) => {
                   const label = `${String.fromCharCode(65 + optIdx)}`;
-                  const isCorrect =
-                    correctAnswers.has(label) ||
-                    correctAnswers.has(`${label}.`);
+                  const isCorrect = correctAnswers.has(label) || correctAnswers.has(`${label}.`);
                   return new Paragraph({
                     indent: { left: 200 },
                     children: [
                       new TextRun({
                         text: `${label}. ${opt}`,
-                        color: isCorrect ? "FF0000" : undefined,
+                        color: isCorrect ? 'FF0000' : undefined,
                       }),
                     ],
                   });
-                })
+                }),
               );
             }
 
@@ -84,10 +64,10 @@ export function buildDoc(
                     new TextRun({
                       text: `答案：${q.answer}`,
                       bold: true,
-                      color: "FF0000",
+                      color: 'FF0000',
                     }),
                   ],
-                })
+                }),
               );
             }
 
@@ -110,7 +90,7 @@ export function buildDoc(
 export const downloadDoc = async (doc: Document, filename: string) => {
   const blob = await Packer.toBlob(doc);
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = url;
   link.download = filename;
   link.click();
