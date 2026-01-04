@@ -1,4 +1,4 @@
-import { RoleInfo, RoleInfoRecord } from "../types/index.types.js";
+import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
 import {
   ROLES_STORE,
   createTransaction,
@@ -6,7 +6,7 @@ import {
   initDB,
   performDatabaseUpgrade,
   promisifyRequest,
-} from "./base.js";
+} from "./base.mts";
 
 // #region ============= 角色管理 =============
 

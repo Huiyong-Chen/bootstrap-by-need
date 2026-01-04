@@ -1,9 +1,9 @@
+import { RoleInfoRecord } from "@/types/index.types.mts";
 import {
   createFragmentWithElements,
   createOptionElement,
   toggleHiddenClass,
-} from "../../utils/domHelpers.js";
-import { RoleInfoRecord } from "../../types/index.types.js";
+} from "@/utils/domHelpers.mts";
 
 /**
  * 角色选择器组件

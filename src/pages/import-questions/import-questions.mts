@@ -1,17 +1,20 @@
+import "@/styles/index.css";
+import "./import-questions.css";
+
 import {
   groupQuestionsByType,
   parseAndValidateQuestions,
-} from "../../api/questions.js";
-import { addRole, getAllRoles } from "../../api/roles.js";
-import { eventListener } from "../../events/index.js";
-import { toggleClass } from "../../utils/domHelpers.js";
-import { saveQuestionBankByRole } from "../../indexed-db/index.js";
-import { RoleInfo, RoleInfoRecord } from "../../types/index.types.js";
+} from "@/api/questions.mts";
+import { addRole, getAllRoles } from "@/api/roles.mts";
+import { Modal } from "@/components/modal/modal.mts";
 import {
   addRoleToSelector,
   renderRoleSelector,
-} from "../../components/roleSelector/roleSelector.js";
-import { Modal } from "../../components/modal/modal.js";
+} from "@/components/roleSelector/roleSelector.mts";
+import { eventListener } from "@/events/index.mts";
+import { saveQuestionBankByRole } from "@/indexed-db/index.mts";
+import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
+import { toggleClass } from "@/utils/domHelpers.mts";
 
 window.addEventListener("DOMContentLoaded", () => {
   // #region =============== DOMS ===============

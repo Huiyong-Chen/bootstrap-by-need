@@ -1,16 +1,16 @@
-import { eventListener } from "../events/index.js";
-import { queryAllRoles, saveRoleInfo } from "../indexed-db/index.js";
-import { RoleInfo, RoleInfoRecord } from "../types/index.types.js";
+import { eventListener } from "@/events/index.mts";
+import { queryAllRoles, saveRoleInfo } from "@/indexed-db/index.mts";
+import { RoleInfo, RoleInfoRecord } from "@/types/index.types.mts";
 
 let _roles: RoleInfoRecord[] = [];
 
-let _inited = false;
+let _initialized = false;
 
 /** 获取全部角色 */
 export async function getAllRoles() {
-  if (!_inited) {
+  if (!_initialized) {
     _roles = await queryAllRoles();
-    _inited = true;
+    _initialized = true;
   }
   return _roles;
 }

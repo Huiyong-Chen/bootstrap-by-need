@@ -1,5 +1,14 @@
-import { QuestionByType, QuestionInfo, QuestionType } from "../types/index.types.js";
-import { initDB, getRoleStoreName, createTransaction, promisifyRequest } from "./base.js";
+import {
+  QuestionByType,
+  QuestionInfo,
+  QuestionType,
+} from "@/types/index.types.mts";
+import {
+  createTransaction,
+  getRoleStoreName,
+  initDB,
+  promisifyRequest,
+} from "./base.mts";
 
 // #region ============= 题目管理 =============
 
@@ -12,7 +21,7 @@ import { initDB, getRoleStoreName, createTransaction, promisifyRequest } from ".
 export async function saveQuestionBankByRole(
   roleId: string,
   bank: QuestionByType,
-  append: boolean = false,
+  append: boolean = false
 ): Promise<void> {
   const db = await initDB();
 
@@ -32,10 +41,15 @@ export async function saveQuestionBankByRole(
           finalBank = { ...existingBank };
 
           // 合并每个题型的题目
-          for (const [questionType, questions] of Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]) {
+          for (const [questionType, questions] of Object.entries(
+            bank
+          ) as unknown as [QuestionType, QuestionInfo[]][]) {
             if (finalBank[questionType]) {
               // 如果题型已存在，追加题目
-              finalBank[questionType] = [...finalBank[questionType], ...questions];
+              finalBank[questionType] = [
+                ...finalBank[questionType],
+                ...questions,
+              ];
             } else {
               // 如果题型不存在，直接使用新数据
               finalBank[questionType] = [...questions];
@@ -44,12 +58,12 @@ export async function saveQuestionBankByRole(
         }
       } catch (error) {
         // 如果获取现有数据失败，继续使用新数据
-        console.warn('获取现有题库数据失败，将使用覆盖模式:', error);
+        console.warn("获取现有题库数据失败，将使用覆盖模式:", error);
       }
     }
 
-    const { stores } = createTransaction(db, [storeName], 'readwrite');
-    const request = (stores as IDBObjectStore).put(finalBank, 'data');
+    const { stores } = createTransaction(db, [storeName], "readwrite");
+    const request = (stores as IDBObjectStore).put(finalBank, "data");
     await promisifyRequest(request);
   } finally {
     db.close();
@@ -62,7 +76,7 @@ export async function saveQuestionBankByRole(
  * @returns 题库数据或null
  */
 export async function getQuestionBankByRole(
-  roleId: string,
+  roleId: string
 ): Promise<QuestionByType | null> {
   const db = await initDB();
 
@@ -73,8 +87,8 @@ export async function getQuestionBankByRole(
       return null;
     }
 
-    const { stores } = createTransaction(db, [storeName], 'readonly');
-    const request = (stores as IDBObjectStore).get('data');
+    const { stores } = createTransaction(db, [storeName], "readonly");
+    const request = (stores as IDBObjectStore).get("data");
     const result = await promisifyRequest(request);
 
     const internalBank: QuestionByType = result || {};

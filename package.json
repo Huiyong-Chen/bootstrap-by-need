@@ -4,18 +4,24 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "pnpm clean && tsc && cp src/utils/docx.js dist/utils/",
-    "build:dev": "pnpm build && tsc -w",
-    "dev": "pnpm build:dev & live-server .",
-    "serve": "live-server ."
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "=====migrate:mts=====": "将ts文件重命名为mts文件",
+    "migrate:mts": "tsx scripts/ts-to-mts.mts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.22.0",
   "devDependencies": {
-    "five-server": "^0.4.5",
-    "typescript": "^5.9.3"
+    "@types/node": "^25.0.3",
+    "minimatch": "^10.1.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "docx": "^9.5.1"
   }
 }

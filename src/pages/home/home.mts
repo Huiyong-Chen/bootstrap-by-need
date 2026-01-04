@@ -1,15 +1,17 @@
-import {
-  renderRoleSelector,
-  updateRoleBadge,
-} from "../../components/roleSelector/roleSelector.js";
-import { Modal } from "../../components/modal/modal.js";
+import "@/styles/index.css";
+import "./home.css";
+
 import {
   GeneratedPaper,
   generatePaper,
   loadQuestionBanks,
-} from "../../api/questions.js";
-import { getAllRoles } from "../../api/roles.js";
-import { toggleClass } from "../../utils/domHelpers.js";
+} from "@/api/questions.mts";
+import { getAllRoles } from "@/api/roles.mts";
+import { Modal } from "@/components/modal/modal.mts";
+import {
+  renderRoleSelector,
+  updateRoleBadge,
+} from "@/components/roleSelector/roleSelector.mts";
 import {
   QuestionByType,
   QuestionInfo,
@@ -17,8 +19,9 @@ import {
   QuestionTypeChineseName,
   QuestionTypeOrder,
   RoleInfoRecord,
-} from "../../types/index.types.js";
-import { buildDoc, downloadDoc } from "../../utils/docExporter.js";
+} from "@/types/index.types.mts";
+import { buildDoc, downloadDoc } from "@/utils/docExporter.mts";
+import { toggleClass } from "@/utils/domHelpers.mts";
 
 window.addEventListener("DOMContentLoaded", () => {
   // #region =============== DOMS ===============
@@ -168,7 +171,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const typeRatioEle = document.createElement("input") as HTMLInputElement;
 
       typeRatioEle.classList.add("ratio-input");
-      typeRatioEle.classList.add('input')
+      typeRatioEle.classList.add("input");
       typeRatioEle.name = `questionType${questionType}`;
       typeRatioEle.type = "number";
       typeRatioEle.placeholder = "输入权重";

@@ -1,0 +1,9 @@
+{
+    "rootDir": "src",
+    "ignore": [
+      "**/*.d.ts",           
+      "vite-env.d.ts",       
+      "**/legacy/**",        
+      "**/temp/*.ts"         
+    ]
+  }

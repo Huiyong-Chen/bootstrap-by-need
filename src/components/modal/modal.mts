@@ -1,3 +1,4 @@
+import "./modal.css";
 // Modal 组件类型定义
 export interface ModalOptions {
   title?: string;

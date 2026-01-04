@@ -1,20 +1,19 @@
-import { getQuestionBankByRole } from "../indexed-db/index.js";
+import { getQuestionBankByRole } from "@/indexed-db/index.mts";
 import {
   QuestionByType,
   QuestionInfo,
   QuestionType,
   QuestionTypeEnum,
   RawQuestion,
-} from "../types/index.types.js";
+} from "@/types/index.types.mts";
 
-
-export type RatioMap = Partial<Record<QuestionType, number>>
+export type RatioMap = Partial<Record<QuestionType, number>>;
 
 export type GeneratedPaper = {
-  list: QuestionInfo[]
-  totalScore: number
-  shortfall?: number
-}
+  list: QuestionInfo[];
+  totalScore: number;
+  shortfall?: number;
+};
 
 // 手动输入情况下转化问题格式
 export function parseAndValidateQuestions(questionsStr: unknown) {
@@ -148,8 +147,8 @@ export function groupQuestionsByType(questions: QuestionInfo[]) {
  * @param roleId 角色id
  */
 export async function loadQuestionBanks(roleId: string) {
-  const questionsByType = await getQuestionBankByRole(roleId)
-  return questionsByType
+  const questionsByType = await getQuestionBankByRole(roleId);
+  return questionsByType;
 }
 
 /**
@@ -162,7 +161,7 @@ export async function loadQuestionBanks(roleId: string) {
 export function generatePaper(
   bank: QuestionByType,
   ratios: RatioMap,
-  targetScore: number,
+  targetScore: number
 ) {
   if (!bank) {
     return { list: [], totalScore: 0 };
@@ -170,7 +169,9 @@ export function generatePaper(
 
   // 初始化可用题目池
   const available = Object.fromEntries(
-    (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(([type, list]) => [type, [...list]]),
+    (Object.entries(bank) as unknown as [QuestionType, QuestionInfo[]][]).map(
+      ([type, list]) => [type, [...list]]
+    )
   ) as Record<QuestionType, QuestionInfo[]>;
 
   const result: QuestionInfo[] = [];
@@ -179,7 +180,10 @@ export function generatePaper(
   while (total < targetScore) {
     // 获取当前有权重且有题目的题型
     const availableTypes = Object.entries(ratios)
-      .filter(([type, weight]) => weight > 0 && available[+type as QuestionType]?.length > 0)
+      .filter(
+        ([type, weight]) =>
+          weight > 0 && available[+type as QuestionType]?.length > 0
+      )
       .map(([type]) => +type as QuestionType);
 
     if (availableTypes.length === 0) {
@@ -190,7 +194,7 @@ export function generatePaper(
     // 使用加权随机选择器从可用题型中选择
     const picker = buildWeightedPicker(
       Object.fromEntries(
-        availableTypes.map(type => [type, ratios[type] || 0])
+        availableTypes.map((type) => [type, ratios[type] || 0])
       ) as RatioMap
     );
 
@@ -228,22 +232,22 @@ export function generatePaper(
 }
 
 function buildWeightedPicker(ratios: RatioMap) {
-  const entries = (Object.entries(ratios) as unknown as [QuestionType, number][])
-  const totalWeight = entries.reduce((acc, [, weight]) => acc + weight, 0)
+  const entries = Object.entries(ratios) as unknown as [QuestionType, number][];
+  const totalWeight = entries.reduce((acc, [, weight]) => acc + weight, 0);
 
   return (): QuestionType | null => {
     if (entries.length === 0 || totalWeight <= 0) {
-      return null
+      return null;
     }
-    let roll = Math.random() * totalWeight
+    let roll = Math.random() * totalWeight;
     for (const [type, weight] of entries) {
-      roll -= weight
+      roll -= weight;
       if (roll <= 0) {
-        return type
+        return type;
       }
     }
-    return entries.at(-1)?.[0] ?? null
-  }
+    return entries.at(-1)?.[0] ?? null;
+  };
 }
 
 const randomPick = <T,>(items: T[]): T =>

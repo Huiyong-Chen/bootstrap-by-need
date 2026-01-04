@@ -1,14 +1,24 @@
 {
   "compilerOptions": {
     "target": "esnext", // 保持现代语法，不转译成 ES5
-    "module": "nodenext", // 保持 import/export
-    "moduleResolution": "nodenext", //支持原生 ESM 的解析逻辑
+    "module": "esnext", // 保持 import/export
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler", // 允许适配构建工具的解析策略
     "outDir": "./dist", // 产物输出到 dist
     "rootDir": "./src", // 源码在 src
-    "strict": true, //开启严格模式
+    "strict": true, // 开启严格模式
     "skipLibCheck": true, // 跳过库文件检查，加速
     "esModuleInterop": true,
-    "sourceMap": true // 支持源码调试
+    "sourceMap": true, // 支持源码调试
+    "noEmit": true, // 不再输出文件，交由 Vite 在内存或打包时处理
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vite/client"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*.ts", "src/**/*.mts", "src/**/*.d.ts"]
 }
