@@ -12,7 +12,7 @@
 结果，我在浏览器里点点点，跑通了主流程，却在下午发现一个边缘的渲染函数崩了——因为它还在尝试读取 `questionInfo.question`。
 
 控制台红通通的 `Uncaught TypeError: Cannot read properties of undefined` 让我非常烦躁。
-这已经是本周第三次发生这种“改了这里，忘了那里”的事故了。
+这已经是本周好几次发生这种“改了这里，忘了那里”的事故了。
 
 ### 诱惑：为什么不直接上 Vite？
 

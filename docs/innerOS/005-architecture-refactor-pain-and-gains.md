@@ -7,10 +7,11 @@
 "这他妈是什么怪物文件？" 我自言自语。
 
 这个文件包含了：
-- DOM元素获取（50+行）
-- 事件绑定逻辑（100+行）
-- 数据处理函数（150+行）
-- UI渲染代码（80+行）
+
+- DOM元素获取
+- 事件绑定逻辑
+- 数据处理函数
+- UI渲染代码
 
 每次要修改一个小功能，都要在茫茫代码海中定位半天。新增导入题库功能的时候，我甚至产生了"直接重写吧"的冲动。
 
@@ -19,6 +20,7 @@
 重构前，我在组件实现方式上纠结了很久：
 
 ### 选项1：HTML-First（Template方式）
+
 ```html
 <template id="modal-template">
   <div class="modal">
@@ -34,6 +36,7 @@
 **尝试后的感受**：超级别扭！比起直接用JS生成DOM还要别扭。最要命的是**template的放置位置问题**！
 
 想象一下，你有一个页面切换功能：
+
 ```javascript
 function switchToHomePage() {
   appContainer.innerHTML = `
@@ -75,6 +78,7 @@ function switchToHomePage() {
 **唯一的好处**：DOM结构确实清晰，在HTML中一目了然。
 
 ### 选项2：Web Components
+
 ```javascript
 class MyModal extends HTMLElement {
   constructor() {
@@ -85,12 +89,14 @@ class MyModal extends HTMLElement {
 ```
 
 **放弃的原因**：
+
 - 浏览器兼容性问题（虽然可以用polyfill）
 - Shadow DOM的学习曲线陡峭
 - 与现有代码风格不匹配
 - 对于这个项目来说过于重量级
 
 ### 选项3：保持JS生成DOM
+
 ```javascript
 function createModal(title, content) {
   const modal = document.createElement('div');
@@ -107,6 +113,7 @@ function createModal(title, content) {
 ```
 
 **最终选择这个的原因**：
+
 - 与现有代码风格一致，学习成本为零
 - 逻辑和UI紧密耦合，容易理解和维护
 - TypeScript支持良好，可以类型检查
@@ -137,11 +144,13 @@ function createModal(title, content) {
 ## 重构的心理挣扎
 
 重构意味着：
+
 - **时间成本**：要花额外的时间重构现有代码
 - **风险**：重构过程中可能引入bug
 - **不确定性**：新架构是否真的更好？
 
 但不重构意味着：
+
 - **持续痛苦**：每次开发都像在泥潭中跋涉
 - **技术债务**：问题会累积到不可收拾
 - **机会成本**：错过更好的架构设计
@@ -163,10 +172,10 @@ function createModal(title, content) {
 
 ```typescript
 // 旧方式：直接调用函数
-someFunction(data)
+someFunction(data);
 
 // 新方式：发布事件
-eventEmitter.emit('dataChanged', data)
+eventEmitter.emit('dataChanged', data);
 ```
 
 ### 3. API层的价值
@@ -176,8 +185,8 @@ eventEmitter.emit('dataChanged', data)
 ```typescript
 // 页面只负责UI和用户交互
 async function handleImport() {
-  const questions = await importQuestionsAPI(file)
-  renderQuestionList(questions)
+  const questions = await importQuestionsAPI(file);
+  renderQuestionList(questions);
 }
 ```
 
